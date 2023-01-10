@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-//use App\Entity\AbstractEntity;
-//use App\Service\TestEntityService;
+use App\Entity\AbstractEntity;
+use App\Service\TestEntityService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,21 +25,21 @@ class IndexController extends AbstractController
                 ");
     }
 
-//    #[Route(path: '/test', name: 'test')]
-//    public function test(
-//        SerializerInterface $serializerInterface,
-//        TestEntityService $testEntityService
-//    ): Response
-//    {
-//
-//
-//        $testEntity = $testEntityService->getAll();
-//
-//        $testSerialized = $serializerInterface->serialize(
-//            $testEntity,
-//            "json"
-//        );
-//        return new JsonResponse($testSerialized, 200, [], true);
-//    }
+    #[Route(path: '/test', name: 'test')]
+    public function test(
+        SerializerInterface $serializerInterface,
+        TestEntityService $testEntityService
+    ): Response
+    {
+
+
+        $testEntity = $testEntityService->getAll();
+
+        $testSerialized = $serializerInterface->serialize(
+            $testEntity,
+            "json"
+        );
+        return new JsonResponse($testSerialized, 200, [], true);
+    }
 
 }
