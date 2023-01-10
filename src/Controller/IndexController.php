@@ -20,7 +20,7 @@ class IndexController extends AbstractController
     {
         return new Response("
             <body>
-                <p>colt</p>
+                <p>colt war</p>
             </body>
                 ");
     }
