@@ -47,10 +47,6 @@ class MemberEntity
     #[ORM\JoinColumn(nullable: false)]
     private ?LocationEntity $location = null;
 
-//    #[ORM\ManyToOne(inversedBy: 'memberEntities')]
-//    #[ORM\JoinColumn(nullable: false)]
-//    private ?LocationEntity $location = null;
-
     public function getId(): ?int
     {
         return $this->id;
@@ -176,27 +172,16 @@ class MemberEntity
         return $this;
     }
 
-//    public function getLocation(): ?LocationEntity
-//    {
-//        return $this->location;
-//    }
-//
-//    public function setLocation(?LocationEntity $location): self
-//    {
-//        $this->location = $location;
-//
-//        return $this;
-//    }
+    public function getLocation(): ?LocationEntity
+    {
+        return $this->location;
+    }
 
-public function getLocation(): ?LocationEntity
-{
-    return $this->location;
-}
+    public function setLocation(?LocationEntity $location): self
+    {
+        $this->location = $location;
 
-public function setLocation(?LocationEntity $location): self
-{
-    $this->location = $location;
+        return $this;
+    }
 
-    return $this;
-}
 }
