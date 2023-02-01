@@ -2,22 +2,16 @@
 
 namespace App\Controller;
 
-use App\Entity\MemberEntity;
-use App\Entity\MemberEntityDepartmentEntity;
 use App\Service\AttendanceEntityService;
 use App\Service\DepartmentEntityService;
-use App\Service\EinsZweiService;
 use App\Service\LocationEntityService;
 use App\Service\MemberDepartmentEntityService;
 use App\Service\MemberEntityService;
 use App\Service\ResponseService;
 use App\Service\SerializerService;
-use App\Service\TestEntityService;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 
