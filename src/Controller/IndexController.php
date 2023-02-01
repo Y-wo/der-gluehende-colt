@@ -82,13 +82,13 @@ class IndexController extends AbstractController
             $members,
             "json",
             //this removes unusable variables resulting from Doctrines 'Many-To-One-Logic'
-//            [
-//                'ignored_attributes' => [
-//                    '__initializer__',
-//                    '__cloner__',
-//                    '__isInitialized__'
-//                ]
-//            ]
+            [
+                'ignored_attributes' => [
+                    '__initializer__',
+                    '__cloner__',
+                    '__isInitialized__'
+                ]
+            ]
         );
 
         return new JsonResponse($membersSerialized, 200, [], true);
