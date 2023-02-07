@@ -3,7 +3,10 @@
 namespace App\Entity;
 
 use App\Repository\MemberEntityRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Ignore;
 
 #[ORM\Entity(repositoryClass: MemberEntityRepository::class)]
 class MemberEntity
@@ -45,7 +48,17 @@ class MemberEntity
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
+    #[Ignore]
     private ?LocationEntity $location = null;
+
+    #[ORM\OneToMany(mappedBy: 'member', targetEntity: MemberDepartmentEntity::class)]
+    #[Ignore]
+    private Collection $memberDepartmentEntities;
+
+    public function __construct()
+    {
+        $this->memberDepartmentEntities = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -180,6 +193,36 @@ class MemberEntity
     public function setLocation(?LocationEntity $location): self
     {
         $this->location = $location;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, MemberDepartmentEntity>
+     */
+    public function getMemberDepartmentEntities(): Collection
+    {
+        return $this->memberDepartmentEntities;
+    }
+
+    public function addMemberDepartmentEntity(MemberDepartmentEntity $memberDepartmentEntity): self
+    {
+        if (!$this->memberDepartmentEntities->contains($memberDepartmentEntity)) {
+            $this->memberDepartmentEntities->add($memberDepartmentEntity);
+            $memberDepartmentEntity->setMember($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMemberDepartmentEntity(MemberDepartmentEntity $memberDepartmentEntity): self
+    {
+        if ($this->memberDepartmentEntities->removeElement($memberDepartmentEntity)) {
+            // set the owning side to null (unless already changed)
+            if ($memberDepartmentEntity->getMember() === $this) {
+                $memberDepartmentEntity->setMember(null);
+            }
+        }
 
         return $this;
     }

@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\AttendanceEntityRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Ignore;
 
 #[ORM\Entity(repositoryClass: AttendanceEntityRepository::class)]
 class AttendanceEntity
@@ -20,6 +21,7 @@ class AttendanceEntity
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
+    #[Ignore]
     private ?MemberEntity $member = null;
 
     public function getId(): ?int

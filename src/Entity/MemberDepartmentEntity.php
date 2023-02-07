@@ -13,37 +13,40 @@ class MemberDepartmentEntity
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private ?int $memberId = null;
+    #[ORM\ManyToOne(inversedBy: 'memberDepartmentEntities')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?MemberEntity $member = null;
 
-    #[ORM\Column]
-    private ?int $departmentId = null;
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?DepartmentEntity $department = null;
+
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getMemberId(): ?int
+    public function getMember(): ?MemberEntity
     {
-        return $this->memberId;
+        return $this->member;
     }
 
-    public function setMemberId(int $memberId): self
+    public function setMember(?MemberEntity $member): self
     {
-        $this->memberId = $memberId;
+        $this->member = $member;
 
         return $this;
     }
 
-    public function getDepartmentId(): ?int
+    public function getDepartment(): ?DepartmentEntity
     {
-        return $this->departmentId;
+        return $this->department;
     }
 
-    public function setDepartmentId(int $departmentId): self
+    public function setDepartment(?DepartmentEntity $department): self
     {
-        $this->departmentId = $departmentId;
+        $this->department = $department;
 
         return $this;
     }
