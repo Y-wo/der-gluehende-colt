@@ -14,7 +14,7 @@ class LocationEntity
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $zip = null;
+    private ?int $zip = null;
 
     #[ORM\Column(length: 255)]
     private ?string $locus = null;
@@ -24,12 +24,12 @@ class LocationEntity
         return $this->id;
     }
 
-    public function getZip(): ?string
+    public function getZip(): ?int
     {
         return $this->zip;
     }
 
-    public function setZip(string $zip): self
+    public function setZip(int $zip): self
     {
         $this->zip = $zip;
 
