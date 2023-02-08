@@ -11,8 +11,3 @@ import './styles/app.css';
 // start the Stimulus application
 // import './bootstrap';
 
-// custom script importing
-import './script'
-const $ = require('jquery');
-require('bootstrap');
-
