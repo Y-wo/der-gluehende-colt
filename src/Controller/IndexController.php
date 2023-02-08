@@ -21,10 +21,34 @@ class IndexController extends AbstractController
     #[Route(path: '/', name: 'index')]
     public function index(): Response
     {
-        return new Response("
-            <body>
-                <p>Yo hallo metalleudee (:</p>
-            </body>
-                ");
+        return $this->render("index.html.twig");
     }
+
+    #[Route(path: '/attendance', name: 'attendance')]
+    public function attendance(): Response
+    {
+        return $this->render("attendance.html.twig");
+    }
+
+    #[Route(path: '/login', name: 'login')]
+    public function login(): Response
+    {
+        return $this->render("");
+    }
+
+    #[Route(path: '/signin', name: 'signin')]
+    public function signin(): Response
+    {
+        return $this->render("");
+    }
+
+    #[Route(path: '/birthday', name: 'birthday')]
+    public function birthday(): Response
+    {
+        return $this->render("birthday.html.twig");
+    }
+
+
+
+
 }

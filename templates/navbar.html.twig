@@ -1,0 +1,124 @@
+{% set tab = tab ?? '' %}
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Der glühende Colt</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <ul class="me-auto mb-2 mb-lg-0">
+                <div class="navbar-nav">
+
+                </div>
+            </ul>
+            <ul class="mb-2 mb-lg-0">
+                <div class="navbar-nav">
+                    <a class="nav-link {% if tab == 'attendance' %} fw-bold {% endif %}"
+                       aria-current="page" href="{{ path('attendance') }}">Anwesenheit</a>
+                    <a class="nav-link {% if tab == 'birthday' %} fw-bold {% endif %}"
+                       href="{{ path('birthday') }}">Geburtstage</a>
+                    <a class="nav-link btn btn-outline-dark" href="signin.html" tabindex="-1" aria-disabled="true"
+                       data-bs-toggle="modal" data-bs-target="#exampleModal">Anmelden</a>
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                         aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <!-- Umändern PHP -->
+                                <form>
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Registrieren</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="mb-3">
+                                            <label for="exampleInputEmail1" class="form-label">Email-Adresse</label>
+                                            <!-- Umändern PHP -->
+                                            <input type="email" class="form-control" id="exampleInputEmail1"
+                                                   aria-describedby="emailHelp">
+                                            <div id="emailHelp" class="form-text">Bitte geben Sie ihre Email-Adresse
+                                                ein.</div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="exampleInputPassword1" class="form-label">Passwort</label>
+                                            <!-- Umändern PHP -->
+                                            <input type="password" class="form-control" id="exampleInputPassword1">
+                                            <div id="emailHelp" class="form-text">Bitte geben Sie ihr Passwort ein.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <!-- Umändern PHP -->
+                                        <button type="button" class="btn btn-primary">Einloggen</button>
+                                    </div>
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Registrieren</h5>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="mb-3">
+                                            <p>Sind Sie neu hier? Dann registrieren Sie sich doch!</p>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-danger"
+                                                data-bs-dismiss="modal">Abbrechen</button>
+                                        <!-- Umändern PHP -->
+                                        <a class="nav-link btn btn-outline-dark" href="signin.html" tabindex="-1"
+                                           aria-disabled="true" data-bs-toggle="modal"
+                                           data-bs-target="#registerUserModal" data-bs-dismiss="modal">Registrieren</a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal fade" id="registerUserModal" tabindex="-1" aria-labelledby="registerUserModal"
+                         aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <!-- Umändern PHP -->
+                                <form>
+                                    <div class="modal-header ps-3">
+                                        <h5 class="modal-title" id="exampleModalLabel">Login</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                    </div>
+                                    <div class="container mt-2 mb-3 ps-3">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <label for="firstname" class="form-label">Vorname</label>
+                                                <input type="text" class="form-control" id="firstname">
+                                            </div>
+                                            <div class="col-6">
+                                                <label for="lastname" class="form-label">Nachname</label>
+                                                <input type="text" class="form-control" id="lastname">
+                                            </div>
+                                        </div>
+                                        <div class="mb-3 mt-2">
+                                            <label for="exampleInputEmail1" class="form-label">Email address</label>
+                                            <input type="email" class="form-control" id="exampleInputEmail1"
+                                                   aria-describedby="emailHelp">
+                                            <div id="emailHelp" class="form-text">We'll never share your email with
+                                                anyone else.</div>
+                                        </div>
+                                        <div class="mb-3 mt-2">
+                                            <label for="birthday" class="form-label">Geburtstag</label>
+                                            <input type="date" class="form-control" id="birthday">
+                                        </div>
+                                        <div class="mb-3 mt-2">
+                                            <label for="exampleInputPassword1" class="form-label">Passwort</label>
+                                            <input type="password" class="form-control" id="exampleInputPassword1">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Registrieren</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ul>
+        </div>
+    </div>
+</nav>

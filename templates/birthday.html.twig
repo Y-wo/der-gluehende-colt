@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Geburtstage
+{% endblock title %}
+
+{% block main_content %}
+
+    {% include 'navbar.html.twig' with {
+        tab : 'birthday'
+    }%}
+
+    <div class="container-md">
+        <h2 class="m-4 ms-0">Geburtstage der nächsten 30 Tage</h2>
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Vorname</th>
+                <th scope="col">Nachname</th>
+                <th scope="col">Geburtstag</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>Mark</td>
+                <td>Nachname</td>
+                <td>02.10.12</td>
+            </tr>
+            <tr>
+                <td>Mark</td>
+                <td>Nachname</td>
+                <td>02.10.12</td>
+            </tr>
+            <tr>
+                <td>Mark</td>
+                <td>Nachname</td>
+                <td>02.10.12</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
