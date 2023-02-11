@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Service\AttendanceEntityService;
 use App\Service\DepartmentEntityService;
+use App\Service\JwtService;
 use App\Service\LocationEntityService;
 use App\Service\MemberDepartmentEntityService;
 use App\Service\MemberEntityService;
@@ -24,6 +25,18 @@ class IndexController extends AbstractController
         return $this->render("index.html.twig");
     }
 
+    #[Route(path: '/test', name: 'test')]
+    public function test(
+        JwtService $jwtService
+    ): Response
+    {
+
+        $jwt = $jwtService->createJwt();
+
+        return new Response($jwt);
+    }
+
+
     #[Route(path: '/attendance', name: 'attendance')]
     public function attendance(): Response
     {
@@ -33,7 +46,7 @@ class IndexController extends AbstractController
     #[Route(path: '/login', name: 'login')]
     public function login(): Response
     {
-        return $this->render("");
+        return $this->render("login.html.twig");
     }
 
     #[Route(path: '/signin', name: 'signin')]

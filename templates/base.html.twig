@@ -31,7 +31,13 @@
 {#    / endDeleteThis#}
 
     <script src="js/script.js"></script>
+
+    {% block page_specific_script %}
+    {% endblock %}
+
     <link rel="stylesheet" href="css/style.css">
+
+
 </head>
 <body>
 {% block main_content %}
