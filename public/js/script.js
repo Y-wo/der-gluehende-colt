@@ -1,30 +1,33 @@
+'use strict';
+import {
+    testFunction,
+    processAuthentication,
+    setJwt
+} from "./authentication.js"
+
 document.addEventListener("DOMContentLoaded", function(){
 
+    setJwt('sdfgsdfg');
+    processAuthentication();
 
-    function getLoginStatus(){
-        console.log('v---------------------------v')
-        console.log("getLoginStatus() aufgerufen")
-
-        sessionStorage.setItem("jwt", "hundekind");
-
-        console.log('^---------------------------^')
-
-        let jwt = sessionStorage.jwt
-
-    }
+    testFunction();
 
 
-    getLoginStatus()
+
+    let testInput = $('.testInput')
+    let testButton = $('.testButton');
+    let testOutput = $('.testOutput')
 
 
-    let testInput = document.querySelector('.testInput')
-    let testButton = document.querySelector('.testButton');
-    let testOutput = document.querySelector('.testOutput')
 
 
-    testButton.addEventListener('click', function() {
-        let content = (testInput.value === '') ? 'Kein Input vorhanden' : testInput.value;
-        testOutput.innerHTML = content;
+    testButton.on("click",function(){
+        // console.log("jquery test")
+        // let content = (testInput.value === '') ? 'Kein Input vorhanden' : testInput.value;
+        // testOutput.html("test ausgabe")
+
+        $('#exampleModal').modal('toggle')
+
     })
 
 
