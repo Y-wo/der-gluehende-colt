@@ -9,20 +9,20 @@
 7. CHECK - Html-Dokument wie bisher einbauen
 8. CHECK - Masl und Thalia die API schicken
 9. CHECK Js checken 
-10. Login
+10. Route schaffen /department/id
+     1. Ausgabe, mit query
+11. Zugriff auf Git Repository geben
+12. Login
         - in member dann isAdmin entfernen
         - nur eventuell Möglichkeit schaffen, dass Admin einen neuen Admin anlegen kann.
     2. wenn Einloggen -> test -> jwt-Generierung -> speichern in sessionStorage -> jedes Mal jwt prüfen
     3. Projekt updaten 
        1. Zugang für Masl und Thalia ermöglichen
     4. überlegen, ob bootstrap-Maske so Sinn macht
-11. Route schaffen /department/id
-    1. Ausgabe, mit query 
-12. Logout
-13. Helper functions erstellen (sinnvolle Funktionen)
+13. Logout
+14. Helper functions erstellen (sinnvolle Funktionen)
     1. fetchSomething (PostFetch/GetFetch/...)
-14. Bootstrap ohne die crossorigin Links versuchen
-15. Zugriff auf Git Repository geben
+15. Bootstrap ohne die crossorigin Links versuchen
 16. Geburtstag in memberEntity reinschreiben.
 17. Fragen, wie sie das mit der Admin-Relation sehen (Wie wollen wir das am besten machen?)
 

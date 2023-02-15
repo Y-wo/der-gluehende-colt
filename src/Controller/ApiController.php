@@ -41,9 +41,15 @@ class ApiController extends AbstractController
         ResponseService $responseService
     ): Response
     {
+
+        $memberWithExtensiveData = $memberEntityService
+            ->getAllMembersWithExtensiveData();
+
         $members = $memberEntityService->getAll();
-        return $responseService->convertObjectToJsonResponse($members);
+        return $responseService->convertObjectToJsonResponse($memberWithExtensiveData);
     }
+
+
 
 
     #[Route(path: '/attendance', name: 'attendance')]
@@ -84,6 +90,17 @@ class ApiController extends AbstractController
     {
         $memberDepartment = $memberDepartmentEntityService->getAll();
         return $responseService->convertObjectToJsonResponse($memberDepartment);
+    }
+
+    #[Route(path: '/member-department/{id}', name: 'member_departments')]
+    public function returnMemberDepartments(
+        MemberDepartmentEntityService $memberDepartmentEntityService,
+        ResponseService $responseService,
+        int $id
+    ): Response
+    {
+        $departmentsOfMember = $memberDepartmentEntityService->getDepartmentsOfMember($id);
+        return $responseService->convertObjectToJsonResponse($departmentsOfMember);
     }
 
 }

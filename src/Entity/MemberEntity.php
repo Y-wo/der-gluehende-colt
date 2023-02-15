@@ -55,9 +55,14 @@ class MemberEntity
     #[Ignore]
     private Collection $memberDepartmentEntities;
 
+    #[ORM\OneToMany(mappedBy: 'member', targetEntity: AttendanceEntity::class)]
+    #[Ignore]
+    private collection $attendance;
+
     public function __construct()
     {
         $this->memberDepartmentEntities = new ArrayCollection();
+        $this->attendance = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -225,6 +230,14 @@ class MemberEntity
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, AttendanceEntity>
+     */
+    public function getAttendanceEntities(): Collection
+    {
+        return $this->attendance;
     }
 
 }
