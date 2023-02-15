@@ -12,14 +12,9 @@ document.addEventListener("DOMContentLoaded", function(){
 
     testFunction();
 
-
-
     let testInput = $('.testInput')
     let testButton = $('.testButton');
     let testOutput = $('.testOutput')
-
-
-
 
     testButton.on("click",function(){
         // console.log("jquery test")

@@ -2,6 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\AdminEntity;
+use App\Entity\MemberEntity;
+use App\Service\AdminEntityService;
 use App\Service\AttendanceEntityService;
 use App\Service\DepartmentEntityService;
 use App\Service\LocationEntityService;
@@ -41,6 +44,7 @@ class ApiController extends AbstractController
         $members = $memberEntityService->getAll();
         return $responseService->convertObjectToJsonResponse($members);
     }
+
 
     #[Route(path: '/attendance', name: 'attendance')]
     public function returnAttendance(

@@ -1,5 +1,7 @@
 {% set tab = tab ?? '' %}
 
+{% set loginPath = 'http://127.0.0.1/der-gluehende-colt/der-gluehende-colt/public/login'  %}
+
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">Der glühende Colt</a>
@@ -26,8 +28,13 @@
                          aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
+
+
+
+
+
                                 <!-- Umändern PHP -->
-                                <form>
+                                <form action=" {{ loginPath }}" method="post">
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="exampleModalLabel">Registrieren</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
@@ -35,41 +42,40 @@
                                     </div>
                                     <div class="modal-body">
                                         <div class="mb-3">
-                                            <label for="exampleInputEmail1" class="form-label">Email-Adresse</label>
+                                            <label for="exampleInputEmail1" class="form-label">Mitgliedsnummer</label>
                                             <!-- Umändern PHP -->
-                                            <input type="email" class="form-control" id="exampleInputEmail1"
-                                                   aria-describedby="emailHelp">
-                                            <div id="emailHelp" class="form-text">Bitte geben Sie ihre Email-Adresse
+                                            <input type="number" class="form-control" id="" name="memberId">
+                                            <div id="emailHelp" class="form-text">Bitte geben Sie ihre Mitgliedsnummer
                                                 ein.</div>
                                         </div>
                                         <div class="mb-3">
                                             <label for="exampleInputPassword1" class="form-label">Passwort</label>
                                             <!-- Umändern PHP -->
-                                            <input type="password" class="form-control" id="exampleInputPassword1">
+                                            <input type="password" class="form-control" id="exampleInputPassword1" name="password">
                                             <div id="emailHelp" class="form-text">Bitte geben Sie ihr Passwort ein.
                                             </div>
                                         </div>
                                     </div>
                                     <div class="modal-footer">
                                         <!-- Umändern PHP -->
-                                        <button type="button" class="btn btn-primary">Einloggen</button>
+                                        <button type="submit" class="btn btn-primary">Einloggen</button>
                                     </div>
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel">Registrieren</h5>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="mb-3">
-                                            <p>Sind Sie neu hier? Dann registrieren Sie sich doch!</p>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-danger"
-                                                data-bs-dismiss="modal">Abbrechen</button>
-                                        <!-- Umändern PHP -->
-                                        <a class="nav-link btn btn-outline-dark" href="signin.html" tabindex="-1"
-                                           aria-disabled="true" data-bs-toggle="modal"
-                                           data-bs-target="#registerUserModal" data-bs-dismiss="modal">Registrieren</a>
-                                    </div>
+{#                                    <div class="modal-header">#}
+{#                                        <h5 class="modal-title" id="exampleModalLabel">Registrieren</h5>#}
+{#                                    </div>#}
+{#                                    <div class="modal-body">#}
+{#                                        <div class="mb-3">#}
+{#                                            <p>Sind Sie neu hier? Dann registrieren Sie sich doch!</p>#}
+{#                                        </div>#}
+{#                                    </div>#}
+{#                                    <div class="modal-footer">#}
+{#                                        <button type="button" class="btn btn-danger"#}
+{#                                                data-bs-dismiss="modal">Abbrechen</button>#}
+{#                                        <!-- Umändern PHP -->#}
+{#                                        <a class="nav-link btn btn-outline-dark" href="signin.html" tabindex="-1"#}
+{#                                           aria-disabled="true" data-bs-toggle="modal"#}
+{#                                           data-bs-target="#registerUserModal" data-bs-dismiss="modal">Registrieren</a>#}
+{#                                    </div>#}
                                 </form>
                             </div>
                         </div>

@@ -38,4 +38,13 @@ abstract class AbstractEntityService
             ->findAll();
     }
 
+    public function getRepository(
+
+    )
+    {
+        return $this->entityManager->getRepository(static::$entityFqn);
+    }
+
+
+
 }

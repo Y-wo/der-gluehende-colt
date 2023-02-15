@@ -1,7 +1,7 @@
 'use strict'
 document.addEventListener("DOMContentLoaded", function(){
 
-    console.log("test aus login.script")
+
 
     let jwtPath = "http://127.0.0.1/der-gluehende-colt/der-gluehende-colt/public/test"
 
