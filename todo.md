@@ -10,23 +10,21 @@
 8. CHECK - Masl und Thalia die API schicken
 9. CHECK Js checken 
 10. Login
-    1. DB-Admin-table
-        - eigene admin table anlegen
-          - dort foreign Key auf user_id machen
         - in member dann isAdmin entfernen
         - nur eventuell Möglichkeit schaffen, dass Admin einen neuen Admin anlegen kann.
     2. wenn Einloggen -> test -> jwt-Generierung -> speichern in sessionStorage -> jedes Mal jwt prüfen
     3. Projekt updaten 
        1. Zugang für Masl und Thalia ermöglichen
     4. überlegen, ob bootstrap-Maske so Sinn macht
-
-11. Logout
-12. Helper functions erstellen (sinnvolle Funktionen)
+11. Route schaffen /department/id
+    1. Ausgabe, mit query 
+12. Logout
+13. Helper functions erstellen (sinnvolle Funktionen)
     1. fetchSomething (PostFetch/GetFetch/...)
-13. Bootstrap ohne die crossorigin Links versuchen
-14. Zugriff auf Git Repository geben
-15. Geburtstag in memberEntity reinschreiben.
-16. Fragen, wie sie das mit der Admin-Relation sehen (Wie wollen wir das am besten machen?)
+14. Bootstrap ohne die crossorigin Links versuchen
+15. Zugriff auf Git Repository geben
+16. Geburtstag in memberEntity reinschreiben.
+17. Fragen, wie sie das mit der Admin-Relation sehen (Wie wollen wir das am besten machen?)
 
 
 - bottstrap login Maske funktioniert in kleinem fenster nicht
