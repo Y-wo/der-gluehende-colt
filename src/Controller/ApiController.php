@@ -23,11 +23,7 @@ class ApiController extends AbstractController
     #[Route(path: '/test', name: 'test')]
     public function test(
         SerializerService $serializerService,
-        MemberEntityService $memberEntityService,
         MemberDepartmentEntityService $memberDepartmentService,
-        AttendanceEntityService $attendanceEntityService,
-        LocationEntityService $locationEntityService,
-        DepartmentEntityService $departmentEntityService
     ): Response
     {
         $testEntity = $memberDepartmentService->getAll();
@@ -35,21 +31,30 @@ class ApiController extends AbstractController
         return new JsonResponse($serializedObject, 200, [], true);
     }
 
-    #[Route(path: '/member', name: 'member')]
-    public function returnMember(
+    #[Route(path: '/member', name: 'members')]
+    public function returnMembers(
         MemberEntityService $memberEntityService,
         ResponseService $responseService
     ): Response
     {
-
-        $memberWithExtensiveData = $memberEntityService
+        $members = $memberEntityService
             ->getAllMembersWithExtensiveData();
 
-        $members = $memberEntityService->getAll();
-        return $responseService->convertObjectToJsonResponse($memberWithExtensiveData);
+        return $responseService->convertObjectToJsonResponse($members);
     }
 
+    #[Route(path: '/member/{id}', name: 'member')]
+    public function returnMember(
+        MemberEntityService $memberEntityService,
+        ResponseService $responseService,
+        int $id
+    ): Response
+    {
+        $member = $memberEntityService
+            ->getMemberWithExtensiveData($id);
 
+        return $responseService->convertObjectToJsonResponse($member);
+    }
 
 
     #[Route(path: '/attendance', name: 'attendance')]
@@ -91,16 +96,4 @@ class ApiController extends AbstractController
         $memberDepartment = $memberDepartmentEntityService->getAll();
         return $responseService->convertObjectToJsonResponse($memberDepartment);
     }
-
-    #[Route(path: '/member-department/{id}', name: 'member_departments')]
-    public function returnMemberDepartments(
-        MemberDepartmentEntityService $memberDepartmentEntityService,
-        ResponseService $responseService,
-        int $id
-    ): Response
-    {
-        $departmentsOfMember = $memberDepartmentEntityService->getDepartmentsOfMember($id);
-        return $responseService->convertObjectToJsonResponse($departmentsOfMember);
-    }
-
 }

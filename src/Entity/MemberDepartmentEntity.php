@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\MemberDepartmentEntityRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Ignore;
 
 #[ORM\Entity(repositoryClass: MemberDepartmentEntityRepository::class)]
 class MemberDepartmentEntity
@@ -15,12 +16,12 @@ class MemberDepartmentEntity
 
     #[ORM\ManyToOne(inversedBy: 'memberDepartmentEntities')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Ignore]
     private ?MemberEntity $member = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?DepartmentEntity $department = null;
-
 
     public function getId(): ?int
     {

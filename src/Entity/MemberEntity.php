@@ -22,9 +22,6 @@ class MemberEntity
     #[ORM\Column(length: 255)]
     private ?string $lastName = null;
 
-    #[ORM\Column]
-    private ?bool $isAdmin = null;
-
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $email = null;
 
@@ -43,16 +40,11 @@ class MemberEntity
     #[ORM\Column]
     private ?bool $deleted = null;
 
-    #[ORM\Column]
-    private ?bool $isGunAuthorized = null;
-
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    #[Ignore]
-    private ?LocationEntity $location = null;
+    private LocationEntity $location ;
 
     #[ORM\OneToMany(mappedBy: 'member', targetEntity: MemberDepartmentEntity::class)]
-    #[Ignore]
     private Collection $memberDepartmentEntities;
 
     #[ORM\OneToMany(mappedBy: 'member', targetEntity: AttendanceEntity::class)]
@@ -63,6 +55,7 @@ class MemberEntity
     {
         $this->memberDepartmentEntities = new ArrayCollection();
         $this->attendance = new ArrayCollection();
+        $this->location = new LocationEntity();
     }
 
     public function getId(): ?int
@@ -90,18 +83,6 @@ class MemberEntity
     public function setLastName(string $lastName): self
     {
         $this->lastName = $lastName;
-
-        return $this;
-    }
-
-    public function isIsAdmin(): ?bool
-    {
-        return $this->isAdmin;
-    }
-
-    public function setIsAdmin(bool $isAdmin): self
-    {
-        $this->isAdmin = $isAdmin;
 
         return $this;
     }
@@ -174,18 +155,6 @@ class MemberEntity
     public function setDeleted(bool $deleted): self
     {
         $this->deleted = $deleted;
-
-        return $this;
-    }
-
-    public function isIsGunAuthorized(): ?bool
-    {
-        return $this->isGunAuthorized;
-    }
-
-    public function setIsGunAuthorized(bool $isGunAuthorized): self
-    {
-        $this->isGunAuthorized = $isGunAuthorized;
 
         return $this;
     }
