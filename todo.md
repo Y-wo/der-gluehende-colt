@@ -9,22 +9,24 @@
 7. CHECK - Html-Dokument wie bisher einbauen
 8. CHECK - Masl und Thalia die API schicken
 9. CHECK Js checken 
-10. Route schaffen /department/id
-     1. Ausgabe, mit query
-11. Zugriff auf Git Repository geben
-12. Login
-        - in member dann isAdmin entfernen
+10. CHECK Route schaffen /member/id
+     1. Ausgabe mit query
+11. Anwesenheiten dieses Jahr checken/ Wert hierfür rausfiltern (member.js)
+12. checken, ob Person HEUTE anwesend ist und dafür einen Wert in der Checkbox setzen
+13. Änderungen in Anwesenheit speicherbar machen
+14. Login
         - nur eventuell Möglichkeit schaffen, dass Admin einen neuen Admin anlegen kann.
     2. wenn Einloggen -> test -> jwt-Generierung -> speichern in sessionStorage -> jedes Mal jwt prüfen
-    3. Projekt updaten 
-       1. Zugang für Masl und Thalia ermöglichen
+    3. Projekt updaten
     4. überlegen, ob bootstrap-Maske so Sinn macht
-13. Logout
-14. Helper functions erstellen (sinnvolle Funktionen)
+15. Logout
+16. Zugriff auf Git Repository geben
+17. Helper functions erstellen (sinnvolle Funktionen)
     1. fetchSomething (PostFetch/GetFetch/...)
-15. Bootstrap ohne die crossorigin Links versuchen
-16. Geburtstag in memberEntity reinschreiben.
-17. Fragen, wie sie das mit der Admin-Relation sehen (Wie wollen wir das am besten machen?)
+18. Bootstrap ohne die crossorigin Links versuchen
+19. Geburtstag in memberEntity reinschreiben.
+20. Fragen, wie sie das mit der Admin-Relation sehen (Wie wollen wir das am besten machen?)
+21. 
 
 
 - bottstrap login Maske funktioniert in kleinem fenster nicht

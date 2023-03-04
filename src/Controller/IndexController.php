@@ -25,8 +25,12 @@ class IndexController extends AbstractController
     #[Route(path: '/', name: 'index')]
     public function index(): Response
     {
+
+
         return $this->render("index.html.twig");
     }
+
+
 
     #[Route(path: '/login', name: 'login')]
     public function login(
@@ -37,11 +41,6 @@ class IndexController extends AbstractController
     {
         // übergebe die Daten an authenticationChecker
         // überprüfe, ob Admin mit ID ! existiert und ob das Passwort übereinstimmt
-
-
-
-
-
 
 //        $memberId = $request->request->get('memberId');
 //        $password = $request->request->get('password');
