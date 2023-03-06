@@ -12,6 +12,9 @@
 10. CHECK Route schaffen /member/id
      1. Ausgabe mit query
 11. Anwesenheiten dieses Jahr checken/ Wert hierfür rausfiltern (member.js)
+    1. INFO: Die	Erwerbsvoraussetzungen	laut	Gesetz	lauten	wie	folgt:
+       A: Entweder die Person ist einmal im Monat anwesend (12x	im	Jahr)	ODER
+       B: Die Person ist 18x im Jahr anwesen
 12. checken, ob Person HEUTE anwesend ist und dafür einen Wert in der Checkbox setzen
 13. Änderungen in Anwesenheit speicherbar machen
 14. Login
