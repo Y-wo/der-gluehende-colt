@@ -24,6 +24,10 @@ class AttendanceEntity
     #[Ignore]
     private ?MemberEntity $member = null;
 
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?DepartmentEntity $department = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -49,6 +53,18 @@ class AttendanceEntity
     public function setMember(?MemberEntity $member): self
     {
         $this->member = $member;
+
+        return $this;
+    }
+
+    public function getDepartment(): ?DepartmentEntity
+    {
+        return $this->department;
+    }
+
+    public function setDepartment(?DepartmentEntity $department): self
+    {
+        $this->department = $department;
 
         return $this;
     }
