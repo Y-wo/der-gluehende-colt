@@ -21,7 +21,7 @@ abstract class AbstractEntityService
     public static $entityFqn;
 
     public function get(int $id)
-//    : ?AbstractEntity
+    : ?AbstractEntity
     {
         return $this
             ->entityManager
@@ -43,6 +43,13 @@ abstract class AbstractEntityService
     )
     {
         return $this->entityManager->getRepository(static::$entityFqn);
+    }
+
+    public function store(AbstractEntity $entity) : self
+    {
+        $this->entityManager->persist($entity);
+        $this->entityManager->flush();
+        return $this;
     }
 
 

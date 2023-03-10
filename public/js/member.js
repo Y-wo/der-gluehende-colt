@@ -5,7 +5,7 @@ const remoteApiPath = "http://www.invincible-projects.de/api/";
 const localApiPath = "http://127.0.0.1/der-gluehende-colt/der-gluehende-colt/public/api/";
 
 // gets all members from server
-function getMembers(){
+async function getMembers(){
     return fetch(localApiPath + "member",
         {
             method: "POST",
@@ -67,6 +67,20 @@ function isMemberHereToday(attendanceEntities){
     return lastAttendanceMs >= midnightMs && lastAttendanceMs <= nowMs;
 }
 
+// set new attendance for member with departmentId
+function setAttendance(memberId, departmentId){
+    return fetch(localApiPath + `set-attendance/${memberId}/${departmentId}`,
+        {
+            method: "POST",
+            headers: {
+            },
+            body:
+                JSON.stringify({
+                })
+        }
+    )
+}
+
 
 document.addEventListener("DOMContentLoaded", async function(){
 
@@ -77,14 +91,14 @@ document.addEventListener("DOMContentLoaded", async function(){
         todo hier:
         checken mit der Funktion isMemberHereToday, ob Person HEUTE anwesend ist und dafür einen Wert in der Checkbox setzen
 
-
-
-
-
+        todo
+        Datums Funktionen evtl vereinfachen (keine Ms nöltig?)
      */
 
     const tableBodyMembers = $('.table-body-members');
-    let members = await getMembers()
+    const testP = $('.test-p');
+    const testBtn = $('.test-btn')
+    let members = await getMembers();
 
 
     // creates table for each member
@@ -93,53 +107,65 @@ document.addEventListener("DOMContentLoaded", async function(){
         const countedAttendances = countMembersGunAttendanceLastYear(member.attendanceEntities)
         const weaponAuthorization = checkWeaponAuthorization(countedAttendances) ? 'ja' : 'nein'
         const isMemberTodayHere = isMemberHereToday(member.attendanceEntities)
-        let checkboxes = ""
+
+        const tableRowMember = $(`<tr class='tr-${member.id}'></tr>`)
+        tableBodyMembers.append(tableRowMember)
+        const tableDataDepartment = $(`<td></td>`)
+        tableRowMember.append(tableDataDepartment)
 
 
-        // create checkbox for each department
+        // create checkbox for each department and add function to set/unset attendance
         for(let entry of member.memberDepartmentEntities){
-            console.log(entry.department.name)
-
             let departmentId = entry.department.id
             let departmentName = entry.department.name
 
-            checkboxes += `<input 
-                            type='checkbox' 
-                            class='checkbox-${departmentName}-${member.id}' 
-                            value="${departmentId}"
-                            >
-                            <label>
-                                ${departmentName}
-                            </label>`
+            let checkboxDepartment = $(`<input type="checkbox" data-department="${departmentId}" data-member="${member.id}">${departmentName}</input>`)
+
+            tableDataDepartment.append(checkboxDepartment)
+
+            checkboxDepartment.click(async function(event){
+
+                let targetsDepartment = event.target.dataset['department']
+                let targetsMember = event.target.dataset['member']
+                let response = await setAttendance(targetsMember, targetsDepartment)
+
+                console.log(await response.text())
 
 
-            let checkboxDepartment = $(`.checkbox-${departmentName}-${member.id}`);
+                //if setting of attendance was successful
+                // if (response.status === 201){
+                //     console.log("yippie!")
+                // }else{
+                //
+                // }
 
-            console.log(checkboxDepartment)
-
-            checkboxDepartment.click(function(){
-                console.log("klick")
-                // console.log("klick! " + member.id + " - " + departmentName + "(ID: " + departmentId + ")")
             })
 
         }
 
         console.log(member)
-        console.log(isMemberTodayHere)
+
+
+        tableRowMember.append("<td data-title='test' class='bla'>bla</td>")
+        $('.bla').click(function(e) {
+            console.log(e.target.dataset['title'])
+            console.log("hello")
+        });
+
+
+
 
         //appends table-row at tableBodyMembers
-        tableBodyMembers.append(
-            `<tr>
-                <td> ${member.firstName} </td>
-                <td> ${member.lastName} </td>
-                <td> ${departmentNames} </td>
-<!--                <td><input type='checkbox' class='checkbox-today-${member.id}'></td>-->
-                <td> ${checkboxes} </td>
-                <td> ${weaponAuthorization} </td>
-            </tr>`
-        )
-
-
+//         tableBodyMembers.append(
+//             `<tr>
+//                 <td> ${member.firstName} </td>
+//                 <td> ${member.lastName} </td>
+//                 <td> ${departmentNames} </td>
+// <!--                <td><input type='checkbox' class='checkbox-today-${member.id}'></td>-->
+//                 <td> ${checkboxes} </td>
+//                 <td> ${weaponAuthorization} </td>
+//             </tr>`
+//         )
 
         // let checkboxToday = $(`.checkbox-today-${member.id}`);
         //
@@ -154,6 +180,23 @@ document.addEventListener("DOMContentLoaded", async function(){
     // console.log(member);
     }
     );
+
+
+//    --------------------------- test
+
+
+
+
+
+
+    //KLAPPT
+    // testBtn.click(async function(){
+    //     let testText = await getMembers();
+    //     let testEntry = testText[0].street
+    //     testP.append(testEntry)
+    // })
+
+
 
 
 })

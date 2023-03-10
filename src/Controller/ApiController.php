@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\AdminEntity;
+use App\Entity\AttendanceEntity;
 use App\Entity\MemberEntity;
 use App\Service\AdminEntityService;
 use App\Service\AttendanceEntityService;
@@ -12,6 +13,8 @@ use App\Service\MemberDepartmentEntityService;
 use App\Service\MemberEntityService;
 use App\Service\ResponseService;
 use App\Service\SerializerService;
+
+use Monolog\DateTimeImmutable;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -67,6 +70,29 @@ class ApiController extends AbstractController
         return $responseService->convertObjectToJsonResponse($attendance);
     }
 
+    #[Route(path: '/set-attendance/{memberId}/{departmentId}', name: 'attendance')]
+    public function setAttendance(
+        AttendanceEntityService $attendanceEntityService,
+        ResponseService $responseService,
+        int $memberId,
+        int $departmentId
+    ): Response
+    {
+        $newAttendance = $attendanceEntityService->createNew($memberId, $departmentId);
+        if(!$newAttendance) {
+            $message = "Could not create new attendanceEntity for member " . $memberId .  " and department " . $departmentId;
+            $status = Response::HTTP_NOT_FOUND;
+            return new Response($message, $status);
+        }
+
+        $attendanceEntityService->store($newAttendance);
+        $message = "New attendanceEntity stored for member " . $memberId .  " and department " . $departmentId;
+        $status = Response::HTTP_CREATED;
+
+        return new Response($message, $status);
+    }
+
+
     #[Route(path: '/department', name: 'department')]
     public function returnDepartment(
         DepartmentEntityService $departmentEntityService,
@@ -76,6 +102,8 @@ class ApiController extends AbstractController
         $department = $departmentEntityService->getAll();
         return $responseService->convertObjectToJsonResponse($department);
     }
+
+
 
     #[Route(path: '/location', name: 'location')]
     public function returnLocation(

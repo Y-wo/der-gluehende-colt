@@ -8,12 +8,15 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Ignore;
 
 #[ORM\Entity(repositoryClass: AttendanceEntityRepository::class)]
-class AttendanceEntity
+class AttendanceEntity extends AbstractEntity
 {
+
+//    Wert vorher hier: private ?int $id = null;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    protected int $id;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $date = null;
@@ -28,7 +31,7 @@ class AttendanceEntity
     #[ORM\JoinColumn(nullable: false)]
     private ?DepartmentEntity $department = null;
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
@@ -50,7 +53,7 @@ class AttendanceEntity
         return $this->member;
     }
 
-    public function setMember(?MemberEntity $member): self
+    public function setMember(?AbstractEntity $member): self
     {
         $this->member = $member;
 
@@ -62,7 +65,7 @@ class AttendanceEntity
         return $this->department;
     }
 
-    public function setDepartment(?DepartmentEntity $department): self
+    public function setDepartment(?AbstractEntity $department): self
     {
         $this->department = $department;
 

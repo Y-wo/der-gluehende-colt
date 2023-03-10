@@ -6,12 +6,12 @@ use App\Repository\DepartmentEntityRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: DepartmentEntityRepository::class)]
-class DepartmentEntity
+class DepartmentEntity extends AbstractEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    protected int $id;
 
     #[ORM\Column(length: 255)]
     private ?string $name = null;
@@ -19,7 +19,7 @@ class DepartmentEntity
     #[ORM\Column]
     private ?int $costs = null;
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
