@@ -70,15 +70,35 @@ class ApiController extends AbstractController
         return $responseService->convertObjectToJsonResponse($attendance);
     }
 
-    #[Route(path: '/set-attendance/{memberId}/{departmentId}', name: 'attendance')]
-    public function setAttendance(
+    #[Route(path: '/handle-attendance/{memberId}/{departmentId}', name: 'attendance')]
+    public function handleAttendance(
         AttendanceEntityService $attendanceEntityService,
         ResponseService $responseService,
         int $memberId,
         int $departmentId
     ): Response
     {
+        $membersDepartmentAttendancesToday = $attendanceEntityService
+            ->getMembersDepartmentAttendancesToday($memberId, $departmentId);
+
+        // check if member already is stored as in attendance today
+        if(count($membersDepartmentAttendancesToday) > 0){
+
+            //delete attendance(s) today
+            foreach ($membersDepartmentAttendancesToday as $attendance){
+                $attendanceEntityService->remove($attendance);
+            }
+
+            $message = "Deleted All attendanceEntities today for member " . $memberId .  " in department " . $departmentId;
+            $status = Response::HTTP_OK;
+
+            return new Response($message, $status);
+        }
+
+        // store new attendance for member in chosen department
         $newAttendance = $attendanceEntityService->createNew($memberId, $departmentId);
+
+        // check if it is possible to create an attendance for chosen member and chosen department
         if(!$newAttendance) {
             $message = "Could not create new attendanceEntity for member " . $memberId .  " and department " . $departmentId;
             $status = Response::HTTP_NOT_FOUND;
@@ -91,6 +111,8 @@ class ApiController extends AbstractController
 
         return new Response($message, $status);
     }
+
+
 
 
     #[Route(path: '/department', name: 'department')]

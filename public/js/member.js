@@ -69,7 +69,7 @@ function isMemberHereToday(attendanceEntities){
 
 // set new attendance for member with departmentId
 function setAttendance(memberId, departmentId){
-    return fetch(localApiPath + `set-attendance/${memberId}/${departmentId}`,
+    return fetch(localApiPath + `handle-attendance/${memberId}/${departmentId}`,
         {
             method: "POST",
             headers: {
@@ -78,6 +78,12 @@ function setAttendance(memberId, departmentId){
                 JSON.stringify({
                 })
         }
+        // .then(async function (response) {
+        //
+        //     // console.log(await response.text())
+        //
+        //     return response;
+        // })
     )
 }
 
@@ -101,83 +107,52 @@ document.addEventListener("DOMContentLoaded", async function(){
     let members = await getMembers();
 
 
-    // creates table for each member
+    // creates table for each member and use information from the fetched "members"
     members.forEach(member => {
+
+        console.log(member);
+
         const departmentNames = getDepartmentNames(member.memberDepartmentEntities);
         const countedAttendances = countMembersGunAttendanceLastYear(member.attendanceEntities)
         const weaponAuthorization = checkWeaponAuthorization(countedAttendances) ? 'ja' : 'nein'
         const isMemberTodayHere = isMemberHereToday(member.attendanceEntities)
 
         const tableRowMember = $(`<tr class='tr-${member.id}'></tr>`)
+        const tableDataFirstName = $(`<td> ${member.firstName} </td>`)
+        const tableDataLastName = $(`<td> ${member.lastName} </td>`)
+        const tableDataDepartments = $(`<td> ${departmentNames} </td>`)
+        const tableDataWeaponAuthorized = $(`<td> ${weaponAuthorization} </td>`)
+        const tableDataForCheckboxes = $(`<td></td>`)
+
         tableBodyMembers.append(tableRowMember)
-        const tableDataDepartment = $(`<td></td>`)
-        tableRowMember.append(tableDataDepartment)
+        tableRowMember.append(tableDataFirstName, tableDataLastName, tableDataDepartments, tableDataForCheckboxes)
 
-
-        // create checkbox for each department and add function to set/unset attendance
+        // create checkbox for each department
+        // add function to set/unset attendance
+        // append checkbox to tableDataForCheckboxes
         for(let entry of member.memberDepartmentEntities){
             let departmentId = entry.department.id
             let departmentName = entry.department.name
 
             let checkboxDepartment = $(`<input type="checkbox" data-department="${departmentId}" data-member="${member.id}">${departmentName}</input>`)
 
-            tableDataDepartment.append(checkboxDepartment)
+            tableDataForCheckboxes.append(checkboxDepartment)
 
+            // add click-EventListener for setting/unsetting the attendance today
             checkboxDepartment.click(async function(event){
+                let targetsDepartment = event.target.dataset['department'];
+                let targetsMember = event.target.dataset['member'];
+                let response = await setAttendance(targetsMember, targetsDepartment);
 
-                let targetsDepartment = event.target.dataset['department']
-                let targetsMember = event.target.dataset['member']
-                let response = await setAttendance(targetsMember, targetsDepartment)
-
-                console.log(await response.text())
-
-
-                //if setting of attendance was successful
-                // if (response.status === 201){
-                //     console.log("yippie!")
-                // }else{
-                //
-                // }
-
+                console.log("Status: " + response.status);
+                console.log(await response.text());
             })
-
         }
 
-        console.log(member)
+
+        tableRowMember.append(tableDataWeaponAuthorized)
 
 
-        tableRowMember.append("<td data-title='test' class='bla'>bla</td>")
-        $('.bla').click(function(e) {
-            console.log(e.target.dataset['title'])
-            console.log("hello")
-        });
-
-
-
-
-        //appends table-row at tableBodyMembers
-//         tableBodyMembers.append(
-//             `<tr>
-//                 <td> ${member.firstName} </td>
-//                 <td> ${member.lastName} </td>
-//                 <td> ${departmentNames} </td>
-// <!--                <td><input type='checkbox' class='checkbox-today-${member.id}'></td>-->
-//                 <td> ${checkboxes} </td>
-//                 <td> ${weaponAuthorization} </td>
-//             </tr>`
-//         )
-
-        // let checkboxToday = $(`.checkbox-today-${member.id}`);
-        //
-        //
-        //
-        //
-        // checkboxToday.click(function(){
-        //     console.log("klick! " + member.id)
-        // })
-
-
-    // console.log(member);
     }
     );
 

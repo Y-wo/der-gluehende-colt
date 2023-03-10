@@ -32,12 +32,8 @@ class AttendanceEntityService extends AbstractEntityService
 
     public function createNew(int $memberId, int $departmentId) : ?AttendanceEntity
     {
-
-
-
         $member = $this->memberEntityService->get($memberId) ?? null;
         $department = $this->departmentEntityService->get($departmentId) ?? null;
-
 
         if(!$member || !$department) return null;
 
@@ -49,13 +45,49 @@ class AttendanceEntityService extends AbstractEntityService
             ->setMember($member)
             ->setDepartment($department);
 
-
         return $newAttendance;
+    }
+
+    public function getMembersDepartmentAttendancesToday(int $memberId, int $departmentId) : bool|array
+    {
+        $member = $this->memberEntityService->get($memberId) ?? null;
+        $department = $this->departmentEntityService->get($departmentId) ?? null;
+
+        if(!$member || !$department) return false;
+
+        $todayMidnight = new \DateTime('today');
+        $queryBuilder = $this
+            ->getRepository()
+            ->createQueryBuilder('r');
+
+        $query = $queryBuilder
+            ->where('r.date > :todayMidnight')
+            ->andWhere('r.member = :member')
+            ->andWhere('r.department = :department')
+            ->setParameter('todayMidnight', $todayMidnight)
+            ->setParameter('member', $member)
+            ->setParameter('department', $department)
+            ->getQuery();
+
+        return $query->execute();
+
+    }
+
+    public function isMemberInDepartmentInAttendanceToday(array $attendances): bool
+    {
+//        $result = $this->getMembersDepartmentAttendancesToday($memberId, $departmentId);
+
+        return count($attendances) > 0;
     }
 
     public function storeAttendance(AbstractEntity $entity) : AbstractEntityService
     {
         return parent::store($entity);
+    }
+
+    public function removeAttendance(AbstractEntity $entity) : AbstractEntityService
+    {
+        return parent::remove($entity);
     }
 
 

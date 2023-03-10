@@ -52,6 +52,15 @@ abstract class AbstractEntityService
         return $this;
     }
 
+    public function remove(AbstractEntity $entity) : self
+    {
+        $this->entityManager->remove($entity);
+        $this->entityManager->flush();
+        return $this;
+    }
+
+
+
 
 
 }
