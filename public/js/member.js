@@ -1,6 +1,7 @@
 'use strict';
-import {getData} from "./helperFunctions.js"
 
+// CONFIGURATION VARIABLES
+const countDepartments = 3
 const remoteApiPath = "http://www.invincible-projects.de/api/";
 const localApiPath = "http://127.0.0.1/der-gluehende-colt/der-gluehende-colt/public/api/";
 
@@ -56,6 +57,7 @@ function checkWeaponAuthorization(gunAttendancesLastYear){
 // returns true if the last stored attendance entry of member in miliseconds is bigger than midnightsMiliSeconds
 // and nowMiliSeconds
 function isMemberHereToday(attendanceEntities){
+
     const now = new Date();
     const nowMs = now.getTime();
     const midnightMs = now.setHours(0,0,0,0);
@@ -64,10 +66,30 @@ function isMemberHereToday(attendanceEntities){
     const lastAttendanceDate = new Date(lastAttendanceEntityDate)
     const lastAttendanceMs = lastAttendanceDate.getTime();
 
+
     return lastAttendanceMs >= midnightMs && lastAttendanceMs <= nowMs;
 }
 
-// set new attendance for member with departmentId
+// determines departments where member is in attendance today
+function getDepartmentsWhereMemberIsInAttendanceToday(attendanceEntities){
+    const now = new Date();
+    const midnightMs = now.setHours(0,0,0,0);
+    const departments = []
+
+    // limits attendances to 3 (see variable "countDepartments") because of performance (there are only a few departments)
+    const lastAttendances = attendanceEntities.slice(-countDepartments)
+
+    for(let attendance of lastAttendances){
+        let attendanceDate = new Date(attendance.date)
+        if(attendanceDate > midnightMs) {
+            departments.push(attendance.department.id)
+        }
+    }
+    return departments;
+}
+
+
+// sets new attendance for member with departmentId
 function setAttendance(memberId, departmentId){
     return fetch(localApiPath + `handle-attendance/${memberId}/${departmentId}`,
         {
@@ -78,12 +100,6 @@ function setAttendance(memberId, departmentId){
                 JSON.stringify({
                 })
         }
-        // .then(async function (response) {
-        //
-        //     // console.log(await response.text())
-        //
-        //     return response;
-        // })
     )
 }
 
@@ -91,15 +107,10 @@ function setAttendance(memberId, departmentId){
 document.addEventListener("DOMContentLoaded", async function(){
 
     /*
-        event Listener für die Checkbox einführen. Soll so klappen wie hier:
-        public/js/member.js:136
-
-        todo hier:
-        checken mit der Funktion isMemberHereToday, ob Person HEUTE anwesend ist und dafür einen Wert in der Checkbox setzen
-
         todo
         Datums Funktionen evtl vereinfachen (keine Ms nöltig?)
      */
+
 
     const tableBodyMembers = $('.table-body-members');
     const testP = $('.test-p');
@@ -107,16 +118,18 @@ document.addEventListener("DOMContentLoaded", async function(){
     let members = await getMembers();
 
 
+    console.log(members);
+
     // creates table for each member and use information from the fetched "members"
     members.forEach(member => {
-
-        console.log(member);
 
         const departmentNames = getDepartmentNames(member.memberDepartmentEntities);
         const countedAttendances = countMembersGunAttendanceLastYear(member.attendanceEntities)
         const weaponAuthorization = checkWeaponAuthorization(countedAttendances) ? 'ja' : 'nein'
-        const isMemberTodayHere = isMemberHereToday(member.attendanceEntities)
+        // const isMemberTodayHere = isMemberHereToday(member.attendanceEntities)
+        const departmentsWhereMemberIsInAttendanceToday = getDepartmentsWhereMemberIsInAttendanceToday(member.attendanceEntities)
 
+        // html table elements
         const tableRowMember = $(`<tr class='tr-${member.id}'></tr>`)
         const tableDataFirstName = $(`<td> ${member.firstName} </td>`)
         const tableDataLastName = $(`<td> ${member.lastName} </td>`)
@@ -127,14 +140,17 @@ document.addEventListener("DOMContentLoaded", async function(){
         tableBodyMembers.append(tableRowMember)
         tableRowMember.append(tableDataFirstName, tableDataLastName, tableDataDepartments, tableDataForCheckboxes)
 
-        // create checkbox for each department
-        // add function to set/unset attendance
-        // append checkbox to tableDataForCheckboxes
+        // creates checkbox for each department
+        // adds function to set/unset attendance
+        // appends checkbox to tableDataForCheckboxes
         for(let entry of member.memberDepartmentEntities){
             let departmentId = entry.department.id
             let departmentName = entry.department.name
 
             let checkboxDepartment = $(`<input type="checkbox" data-department="${departmentId}" data-member="${member.id}">${departmentName}</input>`)
+
+            // set checkbox checked, if member is in attendance today
+            if(departmentsWhereMemberIsInAttendanceToday.includes(departmentId)) checkboxDepartment.prop("checked", true)
 
             tableDataForCheckboxes.append(checkboxDepartment)
 
@@ -146,13 +162,12 @@ document.addEventListener("DOMContentLoaded", async function(){
 
                 console.log("Status: " + response.status);
                 console.log(await response.text());
+
+
             })
         }
 
-
         tableRowMember.append(tableDataWeaponAuthorized)
-
-
     }
     );
 
