@@ -25,11 +25,14 @@ class IndexController extends AbstractController
     #[Route(path: '/', name: 'index')]
     public function index(): Response
     {
-
-
         return $this->render("index.html.twig");
     }
 
+    #[Route(path: '/attendance', name: 'attendance')]
+    public function attendance(): Response
+    {
+        return $this->render("attendance.html.twig");
+    }
 
 
     #[Route(path: '/login', name: 'login')]
@@ -53,14 +56,7 @@ class IndexController extends AbstractController
 //
 //        return new Response($password);
 
-
-
-
-
-
         $response = $adminEntityService->getPasswortByMemberId(5);
-
-
 
         return new Response($response );
     }
@@ -77,12 +73,6 @@ class IndexController extends AbstractController
         return new Response($jwt);
     }
 
-
-    #[Route(path: '/attendance', name: 'attendance')]
-    public function attendance(): Response
-    {
-        return $this->render("attendance.html.twig");
-    }
 
 
     #[Route(path: '/birthday', name: 'birthday')]

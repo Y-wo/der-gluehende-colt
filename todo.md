@@ -1,22 +1,17 @@
 # todo
 
-1. CHECK - Datentypen in den tables der Datenbank anpassen
-2. CHECK - crossOrigin-Zugriff erlauben
-3. CHECK - index.php entfernen aus url
-4. CHECK - ManyToOne-Shit
-5. CHECK - Daten einspielen
-6. CHECK - API testen
-7. CHECK - Html-Dokument wie bisher einbauen
-8. CHECK - Masl und Thalia die API schicken
-9. CHECK Js checken 
-10. CHECK Route schaffen /member/id
-     1. Ausgabe mit query
-11. Anwesenheiten dieses Jahr checken/ Wert hierfür rausfiltern (member.js)
-    1. INFO: Die	Erwerbsvoraussetzungen	laut	Gesetz	lauten	wie	folgt:
-       A: Entweder die Person ist einmal im Monat anwesend (12x	im	Jahr)	ODER
-       B: Die Person ist 18x im Jahr anwesen
-12. checken, ob Person HEUTE anwesend ist und dafür einen Wert in der Checkbox setzen
-13. Änderungen in Anwesenheit speicherbar machen
+- Geburtstags Attribut einpferchen
+- Geburtstage ausgeben
+- member anlegen
+- member bearbeiten
+- member löschen
+- admin anlegen
+- admin ändern
+- login (bootstrap Maske entfernen)
+- logout
+- auf Server legen
+
+
 14. Login
         - nur eventuell Möglichkeit schaffen, dass Admin einen neuen Admin anlegen kann.
     2. wenn Einloggen -> test -> jwt-Generierung -> speichern in sessionStorage -> jedes Mal jwt prüfen
@@ -41,7 +36,7 @@
 - bootstrap links + webpack shit evtl. löschen
 - Code bereinigen
 - gucken, ob css anders wirkt auf /member oder /index.php/member
-
+- attendencesPerYearForGunAuhorization auf 12 erhöhen
 
 ## Befehle
 - für jwt:

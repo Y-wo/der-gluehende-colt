@@ -1,13 +1,33 @@
 'use strict';
 
 // CONFIGURATION VARIABLES
-const countDepartments = 3
 const remoteApiPath = "http://www.invincible-projects.de/api/";
 const localApiPath = "http://127.0.0.1/der-gluehende-colt/der-gluehende-colt/public/api/";
+const apiPath = localApiPath
+const countDepartments = 3;
+const attendencesPerYearForGunAuhorization = 1;
+
 
 // gets all members from server
 async function getMembers(){
     return fetch(localApiPath + "member",
+        {
+            method: "POST",
+            headers: {
+            },
+            body:
+                JSON.stringify({
+                })
+        }
+    )
+        .then(async function (response) {
+            return JSON.parse(await response.text())
+        })
+}
+
+// get member flrom server
+function getMember(id){
+    return fetch(localApiPath + `member/${id}`,
         {
             method: "POST",
             headers: {
@@ -31,12 +51,14 @@ function getDepartmentNames(memberDepartmentEntities){
     return departmentNames;
 }
 
-// returns members attendance in the last year in the gut department
-// info: Date is turned into miliSecond to count (getTime())
+// returns members attendance in the last year in the gun department
+// info: Date is turned into miliSecond for counting (getTime())
 function countMembersGunAttendanceLastYear(attendances){
     let counter = 0
     const oneYearAgoMs = new Date(new Date().setFullYear(new Date().getFullYear() - 1)).getTime();
     const todayMs = new Date().getTime();
+
+    console.log(attendances)
 
     for (let entry of attendances){
         // only count if attendance relates to department "gun"
@@ -51,24 +73,22 @@ function countMembersGunAttendanceLastYear(attendances){
 
 // checks, if member is authorized to buy a weapon
 function checkWeaponAuthorization(gunAttendancesLastYear){
-    return gunAttendancesLastYear >= 12;
+    return gunAttendancesLastYear >= attendencesPerYearForGunAuhorization;
 }
 
 // returns true if the last stored attendance entry of member in miliseconds is bigger than midnightsMiliSeconds
 // and nowMiliSeconds
-function isMemberHereToday(attendanceEntities){
-
-    const now = new Date();
-    const nowMs = now.getTime();
-    const midnightMs = now.setHours(0,0,0,0);
-    const lastAttendanceEntity = attendanceEntities.slice(-1)[0];
-    const lastAttendanceEntityDate = lastAttendanceEntity.date;
-    const lastAttendanceDate = new Date(lastAttendanceEntityDate)
-    const lastAttendanceMs = lastAttendanceDate.getTime();
-
-
-    return lastAttendanceMs >= midnightMs && lastAttendanceMs <= nowMs;
-}
+// function isMemberHereToday(attendanceEntities){
+//     const now = new Date();
+//     const nowMs = now.getTime();
+//     const midnightMs = now.setHours(0,0,0,0);
+//     const lastAttendanceEntity = attendanceEntities.slice(-1)[0];
+//     const lastAttendanceEntityDate = lastAttendanceEntity.date;
+//     const lastAttendanceDate = new Date(lastAttendanceEntityDate)
+//     const lastAttendanceMs = lastAttendanceDate.getTime();
+//
+//     return lastAttendanceMs >= midnightMs && lastAttendanceMs <= nowMs;
+// }
 
 // determines departments where member is in attendance today
 function getDepartmentsWhereMemberIsInAttendanceToday(attendanceEntities){
@@ -88,7 +108,6 @@ function getDepartmentsWhereMemberIsInAttendanceToday(attendanceEntities){
     return departments;
 }
 
-
 // sets new attendance for member with departmentId
 function setAttendance(memberId, departmentId){
     return fetch(localApiPath + `handle-attendance/${memberId}/${departmentId}`,
@@ -105,27 +124,17 @@ function setAttendance(memberId, departmentId){
 
 
 document.addEventListener("DOMContentLoaded", async function(){
-
-    /*
-        todo
-        Datums Funktionen evtl vereinfachen (keine Ms nöltig?)
-     */
-
-
     const tableBodyMembers = $('.table-body-members');
-    const testP = $('.test-p');
-    const testBtn = $('.test-btn')
     let members = await getMembers();
 
-
-    console.log(members);
-
-    // creates table for each member and use information from the fetched "members"
+    // creates table for each member and append it to the already existing table "tableBodyMembers"
+    // therefor use information from the fetched "members"
     members.forEach(member => {
-
         const departmentNames = getDepartmentNames(member.memberDepartmentEntities);
-        const countedAttendances = countMembersGunAttendanceLastYear(member.attendanceEntities)
-        const weaponAuthorization = checkWeaponAuthorization(countedAttendances) ? 'ja' : 'nein'
+        let countedAttendances = countMembersGunAttendanceLastYear(member.attendanceEntities)
+        let isWeaponAuthorized = checkWeaponAuthorization(countedAttendances)
+        let weaponAutorizationWord = isWeaponAuthorized ? 'ja' : 'nein'
+        let weaponAuthorizationColor = isWeaponAuthorized ? 'bg-success' : 'bg-danger'
         // const isMemberTodayHere = isMemberHereToday(member.attendanceEntities)
         const departmentsWhereMemberIsInAttendanceToday = getDepartmentsWhereMemberIsInAttendanceToday(member.attendanceEntities)
 
@@ -134,7 +143,7 @@ document.addEventListener("DOMContentLoaded", async function(){
         const tableDataFirstName = $(`<td> ${member.firstName} </td>`)
         const tableDataLastName = $(`<td> ${member.lastName} </td>`)
         const tableDataDepartments = $(`<td> ${departmentNames} </td>`)
-        const tableDataWeaponAuthorized = $(`<td> ${weaponAuthorization} </td>`)
+        let tableDataWeaponAuthorized = $(`<td class="weapon-autorization-${member.id} ${weaponAuthorizationColor} rounded"> ${weaponAutorizationWord} </td>`)
         const tableDataForCheckboxes = $(`<td></td>`)
 
         tableBodyMembers.append(tableRowMember)
@@ -159,34 +168,32 @@ document.addEventListener("DOMContentLoaded", async function(){
                 let targetsDepartment = event.target.dataset['department'];
                 let targetsMember = event.target.dataset['member'];
                 let response = await setAttendance(targetsMember, targetsDepartment);
-
                 console.log("Status: " + response.status);
                 console.log(await response.text());
 
 
+                // update gunAuthorization information
+                // - get member new from server
+                // - check again if member is authorized (and change visualization)
+                let updatedMember = await getMember(member.id)
+                let updatedCountedAttendances = countMembersGunAttendanceLastYear(updatedMember[0].attendanceEntities)
+                let updatedIsWeaponAuthorized = checkWeaponAuthorization(updatedCountedAttendances);
+                let updatedWeaponAuthorizationWord = updatedIsWeaponAuthorized ?  'ja' : 'nein';
+                let updatedWeaponAuthorizationColor = updatedIsWeaponAuthorized ? 'bg-success' : 'bg-danger'
+
+                tableDataWeaponAuthorized.html(updatedWeaponAuthorizationWord)
+
+                if(updatedWeaponAuthorizationColor === "bg-danger" && tableDataWeaponAuthorized.hasClass('bg-success')){
+                    tableDataWeaponAuthorized.removeClass("bg-success")
+                    tableDataWeaponAuthorized.addClass('bg-danger')
+                }else if(updatedWeaponAuthorizationColor === "bg-success" && tableDataWeaponAuthorized.hasClass('bg-danger')){
+                    tableDataWeaponAuthorized.removeClass("bg-danger")
+                    tableDataWeaponAuthorized.addClass('bg-success')
+                }
             })
         }
 
         tableRowMember.append(tableDataWeaponAuthorized)
     }
     );
-
-
-//    --------------------------- test
-
-
-
-
-
-
-    //KLAPPT
-    // testBtn.click(async function(){
-    //     let testText = await getMembers();
-    //     let testEntry = testText[0].street
-    //     testP.append(testEntry)
-    // })
-
-
-
-
 })
