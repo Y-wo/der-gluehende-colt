@@ -1,3 +1,15 @@
 body {
-    background-color: sandybrown;
+    background-color: lightgrey;
+}
+
+h1, h2, h3, h4, h5 {
+    padding: 1rem 0;
+}
+
+input, select {
+    border-radius: 5px;
+}
+
+label{
+    padding-bottom: 1rem;
 }

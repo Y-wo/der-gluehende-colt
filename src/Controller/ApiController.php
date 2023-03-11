@@ -17,10 +17,11 @@ use App\Service\SerializerService;
 use Monolog\DateTimeImmutable;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route(path: '/api', name: 'api')]
+#[Route(path: '/api', name: 'api_')]
 class ApiController extends AbstractController
 {
     #[Route(path: '/test', name: 'test')]
@@ -34,19 +35,21 @@ class ApiController extends AbstractController
         return new JsonResponse($serializedObject, 200, [], true);
     }
 
-    #[Route(path: '/member', name: 'members')]
+
+    #[Route(path: '/member', name: 'get_members')]
     public function returnMembers(
         MemberEntityService $memberEntityService,
         ResponseService $responseService
     ): Response
     {
         $members = $memberEntityService
-            ->getAllMembersWithExtensiveData();
+            ->getAllMembers();
 
         return $responseService->convertObjectToJsonResponse($members);
     }
 
-    #[Route(path: '/member/{id}', name: 'member')]
+
+    #[Route(path: '/member/{id}', name: 'get_member')]
     public function returnMember(
         MemberEntityService $memberEntityService,
         ResponseService $responseService,
@@ -54,13 +57,53 @@ class ApiController extends AbstractController
     ): Response
     {
         $member = $memberEntityService
-            ->getMemberWithExtensiveData($id);
+            ->getMember($id);
 
         return $responseService->convertObjectToJsonResponse($member);
     }
 
+    #[Route(path: '/create-member', name: 'create_member')]
+    public function createNewMember(
+        MemberEntityService $memberEntityService,
+        ResponseService $responseService,
+        Request $request,
+    ): Response
+    {
+        $firstName = $request->request->get('firstName');
+        $lastName = $request->request->get('lastName');
+        $email = $request->request->get('email');
+        $street = $request->request->get('street');
+        $houseNumber = $request->request->get('houseNumber');
+        $addressSelect = $request->request->get('addressSelect');
+        $zip = $request->request->get('zip');
+        $locus = $request->request->get('locus');
+        $phone = $request->request->get('phone');
+        $birthday = $request->request->get('birthday');
+        $departments = $request->request->get('departments');
 
-    #[Route(path: '/attendance', name: 'attendance')]
+
+        dd($request->request);
+
+
+
+
+    }
+
+
+    #[Route(path: '/birthdays', name: 'get_birthdays')]
+    public function getBirthdays(
+        MemberEntityService $memberEntityService,
+        ResponseService $responseService
+    ): Response
+    {
+        $members = $memberEntityService
+            ->getMembersWhoseBirthdayIsComing();
+
+        return $responseService->convertObjectToJsonResponse($members);
+    }
+
+
+    #[Route(path: '/attendance', name: 'get_attendance')]
     public function returnAttendance(
         AttendanceEntityService $attendanceEntityService,
         ResponseService $responseService
@@ -69,6 +112,7 @@ class ApiController extends AbstractController
         $attendance = $attendanceEntityService->getAll();
         return $responseService->convertObjectToJsonResponse($attendance);
     }
+
 
     #[Route(path: '/handle-attendance/{memberId}/{departmentId}', name: 'attendance')]
     public function handleAttendance(
@@ -113,9 +157,7 @@ class ApiController extends AbstractController
     }
 
 
-
-
-    #[Route(path: '/department', name: 'department')]
+    #[Route(path: '/department', name: 'get_department')]
     public function returnDepartment(
         DepartmentEntityService $departmentEntityService,
         ResponseService $responseService
@@ -126,8 +168,7 @@ class ApiController extends AbstractController
     }
 
 
-
-    #[Route(path: '/location', name: 'location')]
+    #[Route(path: '/location', name: 'get_location')]
     public function returnLocation(
         LocationEntityService $locationEntityService,
         ResponseService $responseService
@@ -137,7 +178,8 @@ class ApiController extends AbstractController
         return $responseService->convertObjectToJsonResponse($location);
     }
 
-    #[Route(path: '/member-department', name: 'member_department')]
+
+    #[Route(path: '/member-department', name: 'get_member_department')]
     public function returnMemberDepartment(
         MemberDepartmentEntityService $memberDepartmentEntityService,
         ResponseService $responseService

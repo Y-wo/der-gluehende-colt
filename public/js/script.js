@@ -1,16 +1,12 @@
 'use strict';
-import {
-    testFunction,
-    processAuthentication,
-    setJwt
-} from "./authentication.js"
+import {testFunction} from "./authentication.js"
 
 document.addEventListener("DOMContentLoaded", function(){
 
     // setJwt('sdfgsdfg');
     // processAuthentication();
     //
-    // testFunction();
+    testFunction();
 
     let testInput = $('.testInput')
     let testButton = $('.testButton');

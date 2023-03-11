@@ -28,10 +28,16 @@ class IndexController extends AbstractController
         return $this->render("index.html.twig");
     }
 
-    #[Route(path: '/attendance', name: 'attendance')]
-    public function attendance(): Response
+    #[Route(path: '/members', name: 'members')]
+    public function members(): Response
     {
-        return $this->render("attendance.html.twig");
+        return $this->render("members.html.twig");
+    }
+
+    #[Route(path: '/new-members', name: 'new_member')]
+    public function newMember(): Response
+    {
+        return $this->render("new_member.html.twig");
     }
 
 

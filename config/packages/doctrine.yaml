@@ -16,6 +16,14 @@ doctrine:
                 prefix: 'App\Entity'
                 alias: App
 
+        dql:
+            string_functions:
+                MONTH: DoctrineExtensions\Query\Mysql\Month
+                YEAR: DoctrineExtensions\Query\Mysql\Year
+                DAY: DoctrineExtensions\Query\Mysql\Day
+                IF: DoctrineExtensions\Query\Mysql\IfElse
+
+
 when@test:
     doctrine:
         dbal:

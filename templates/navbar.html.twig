@@ -17,10 +17,8 @@
             </ul>
             <ul class="mb-2 mb-lg-0">
                 <div class="navbar-nav">
-                    <a class="nav-link {% if tab == 'attendance' %} fw-bold {% endif %}"
-                       aria-current="page" href="{{ path('attendance') }}">Anwesenheit</a>
-                    <a class="nav-link {% if tab == 'birthday' %} fw-bold {% endif %}"
-                       href="{{ path('birthday') }}">Geburtstage</a>
+                    <a class="nav-link {% if tab == 'members' %} fw-bold {% endif %}"
+                       aria-current="page" href="{{ path('members') }}">Mitglieder</a>
                     <a class="nav-link btn btn-outline-dark" href="signin.html" tabindex="-1" aria-disabled="true"
                        data-bs-toggle="modal" data-bs-target="#exampleModal">Anmelden</a>
                     <!-- Modal -->
@@ -28,10 +26,6 @@
                          aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
-
-
-
-
 
                                 <!-- Umändern PHP -->
                                 <form action=" {{ loginPath }}" method="post">

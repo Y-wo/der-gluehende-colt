@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\MemberEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Ignore;
 
@@ -50,6 +51,9 @@ class MemberEntity extends AbstractEntity
     #[ORM\OneToMany(mappedBy: 'member', targetEntity: AttendanceEntity::class)]
     #[Ignore]
     private collection $attendance;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $birthday = null;
 
     public function __construct()
     {
@@ -208,5 +212,18 @@ class MemberEntity extends AbstractEntity
     {
         return $this->attendance;
     }
+
+    public function getBirthday(): ?\DateTimeInterface
+    {
+        return $this->birthday;
+    }
+
+    public function setBirthday(?\DateTimeInterface $birthday): self
+    {
+        $this->birthday = $birthday;
+
+        return $this;
+    }
+
 
 }

@@ -1,16 +1,13 @@
 'use strict';
-
-// CONFIGURATION VARIABLES
-const remoteApiPath = "http://www.invincible-projects.de/api/";
-const localApiPath = "http://127.0.0.1/der-gluehende-colt/der-gluehende-colt/public/api/";
-const apiPath = localApiPath
-const countDepartments = 3;
-const attendencesPerYearForGunAuhorization = 1;
-
+import {
+    apiPath,
+    countDepartments,
+    attendencesPerYearForGunAuhorization
+} from "./configuration.js";
 
 // gets all members from server
 async function getMembers(){
-    return fetch(localApiPath + "member",
+    return fetch(apiPath + "member",
         {
             method: "POST",
             headers: {
@@ -25,9 +22,9 @@ async function getMembers(){
         })
 }
 
-// get member flrom server
+// get member from server
 function getMember(id){
-    return fetch(localApiPath + `member/${id}`,
+    return fetch(apiPath + `member/${id}`,
         {
             method: "POST",
             headers: {
@@ -76,20 +73,6 @@ function checkWeaponAuthorization(gunAttendancesLastYear){
     return gunAttendancesLastYear >= attendencesPerYearForGunAuhorization;
 }
 
-// returns true if the last stored attendance entry of member in miliseconds is bigger than midnightsMiliSeconds
-// and nowMiliSeconds
-// function isMemberHereToday(attendanceEntities){
-//     const now = new Date();
-//     const nowMs = now.getTime();
-//     const midnightMs = now.setHours(0,0,0,0);
-//     const lastAttendanceEntity = attendanceEntities.slice(-1)[0];
-//     const lastAttendanceEntityDate = lastAttendanceEntity.date;
-//     const lastAttendanceDate = new Date(lastAttendanceEntityDate)
-//     const lastAttendanceMs = lastAttendanceDate.getTime();
-//
-//     return lastAttendanceMs >= midnightMs && lastAttendanceMs <= nowMs;
-// }
-
 // determines departments where member is in attendance today
 function getDepartmentsWhereMemberIsInAttendanceToday(attendanceEntities){
     const now = new Date();
@@ -110,7 +93,7 @@ function getDepartmentsWhereMemberIsInAttendanceToday(attendanceEntities){
 
 // sets new attendance for member with departmentId
 function setAttendance(memberId, departmentId){
-    return fetch(localApiPath + `handle-attendance/${memberId}/${departmentId}`,
+    return fetch(apiPath + `handle-attendance/${memberId}/${departmentId}`,
         {
             method: "POST",
             headers: {

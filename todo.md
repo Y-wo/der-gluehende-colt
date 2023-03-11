@@ -10,6 +10,7 @@
 - login (bootstrap Maske entfernen)
 - logout
 - auf Server legen
+- optisch anpassen (?)
 
 
 14. Login
@@ -32,6 +33,7 @@
 - wahrscheinlich bald git-token erneuern
 
 ## Zum Schluss
+- hier ist noch ein manueller loginPath gesetzt: C:\xampp\htdocs\der-gluehende-colt\der-gluehende-colt\templates\navbar.html.twig
 - Env auf prod ändern
 - bootstrap links + webpack shit evtl. löschen
 - Code bereinigen

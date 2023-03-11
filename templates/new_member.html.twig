@@ -1,0 +1,80 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+    Mitglieder
+{% endblock title %}
+
+{% block main_content %}
+
+    {% include 'navbar.html.twig' with {
+        tab : 'members'
+    }%}
+
+{#    <script type="module" src="js/newMember.js"></script>#}
+
+    <div class="container-md member-div">
+
+        <h2 class="text-decoration-underline">Neues Mitglied</h2>
+
+        <div class="d-flex justify-content-center">
+            <form class="d-flex flex-column w-25" action="{{ path('api_create_member') }}" method="post">
+
+                <h3>Personen Daten</h3>
+
+                <input name="firstName" type="text" required>
+                <label for="firstName">Vorname</label>
+
+                <input name="lastName" type="text" required>
+                <label for="lastName">Nachname</label>
+
+                <input name="email" type="email" required>
+                <label for="email">E-Mail</label>
+
+                <input name="street" type="text" required>
+                <label for="street">Straße</label>
+
+                <input name="houseNumber" type="text" required>
+                <label for="houseNumber">Hausnummer</label>
+
+                <select name="addressSelect">
+                    <option>test</option>
+                </select>
+                <label for="addressSelect">PLZ, Ort</label>
+
+                <input name="zip" type="text">
+                <label for="zip">Postleitzahl</label>
+
+                <input name="locus" type="text">
+                <label for="locus">Ort</label>
+
+                <input name="phone" type="number" required>
+                <label for="phone">TelefonNummer</label>
+
+                <input name="birthday" type="date" required>
+                <label for="birthday">Geburtstag</label>
+
+                <h3>Abteilungen</h3>
+
+                <div class="d-flex">
+                    <input name="gun" type="checkbox" value="true">
+                    <label for="gun">Schusswaffen</label>
+                </div>
+
+                <div class="d-flex">
+                    <input name="bow" type="checkbox" value="true">
+                    <label for="bow">Bogen</label>
+                </div>
+
+                <div class="d-flex">
+                    <input name="airPressure" type="checkbox" value="true">
+                    <label for="airPressure">Luftdruck</label>
+                </div>
+
+
+                <input type="submit" value="Anlegen" name="create">
+            </form>
+        </div>
+
+    </div>
+
+{% endblock %}
