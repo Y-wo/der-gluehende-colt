@@ -16,9 +16,14 @@
 
         <h2 class="text-decoration-underline">Mitglieder</h2>
 
+        <div class="d-flex justify-content-end">
+            <a href="{{ path('new_member') }}" class="btn bg-info ">Mitglied anlegen</a>
+        </div>
+
         <table class="table table-hover">
             <thead>
             <tr>
+                <th scope="col"> Mitgliedsnummer</th>
                 <th scope="col">Vorname</th>
                 <th scope="col">Nachname</th>
                 <th scope="col">Abteilung</th>
@@ -29,10 +34,6 @@
             <tbody class="table-body-members">
             </tbody>
         </table>
-
-        <div class="d-flex justify-content-end">
-            <a href="{{ path('new_member') }}" class="btn bg-info ">Mitglied anlegen</a>
-        </div>
 
     </div>
 

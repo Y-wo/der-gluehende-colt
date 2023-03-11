@@ -83,7 +83,6 @@ class MemberEntityService extends AbstractEntityService
 
         $members = $query->getResult();
 
-
         // sort members by their birthday (only day and month)
         usort(
             $members,
@@ -97,5 +96,12 @@ class MemberEntityService extends AbstractEntityService
 
         return $members;
     }
+
+    public function setMemberDeleted(int $id){
+        /**@var MemberEntity $member*/
+        $member = $this->get($id);
+        $member->setDeleted(true);
+    }
+
 
 }

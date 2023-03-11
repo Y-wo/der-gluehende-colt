@@ -7,12 +7,12 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Ignore;
 
 #[ORM\Entity(repositoryClass: MemberDepartmentEntityRepository::class)]
-class MemberDepartmentEntity
+class MemberDepartmentEntity extends AbstractEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    protected int $id;
 
     #[ORM\ManyToOne(inversedBy: 'memberDepartmentEntities')]
     #[ORM\JoinColumn(nullable: false)]
@@ -45,7 +45,7 @@ class MemberDepartmentEntity
         return $this->department;
     }
 
-    public function setDepartment(?DepartmentEntity $department): self
+    public function setDepartment(?AbstractEntity $department): self
     {
         $this->department = $department;
 

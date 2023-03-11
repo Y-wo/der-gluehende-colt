@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\AdminEntity;
 use App\Entity\AttendanceEntity;
+use App\Entity\LocationEntity;
+use App\Entity\MemberDepartmentEntity;
 use App\Entity\MemberEntity;
 use App\Service\AdminEntityService;
 use App\Service\AttendanceEntityService;
@@ -66,26 +68,81 @@ class ApiController extends AbstractController
     public function createNewMember(
         MemberEntityService $memberEntityService,
         ResponseService $responseService,
+        LocationEntityService $locationEntityService,
+        MemberDepartmentEntityService $memberDepartmentEntityService,
+        DepartmentEntityService $departmentEntityService,
         Request $request,
     ): Response
     {
+        $newMember = new MemberEntity();
+
         $firstName = $request->request->get('firstName');
         $lastName = $request->request->get('lastName');
         $email = $request->request->get('email');
         $street = $request->request->get('street');
         $houseNumber = $request->request->get('houseNumber');
-        $addressSelect = $request->request->get('addressSelect');
         $zip = $request->request->get('zip');
         $locus = $request->request->get('locus');
         $phone = $request->request->get('phone');
-        $birthday = $request->request->get('birthday');
-        $departments = $request->request->get('departments');
+        $birthday = new \DateTime($request->request->get('birthday'));
+        $gun = $request->request->get('gun');
+        $bow = $request->request->get('bow');
+        $airPressure = $request->request->get('airPressure');
+        $createdAt = new \DateTimeImmutable();
 
 
-        dd($request->request);
+        // check if locationEntity already exists and if not create new one
+        $locations = $locationEntityService->getLocationsByZip($zip);
+        if(count($locations) == 0)
+        {
+            $location = new LocationEntity();
+            $location
+                ->setZip($zip)
+                ->setLocus($locus)
+                ;
+            $locationEntityService->store($location);
+        }else{
+            $location = $locations[0];
+        }
 
+        $newMember
+            ->setFirstName($firstName)
+            ->setLastName($lastName)
+            ->setEmail($email)
+            ->setStreet($street)
+            ->setHouseNumber($houseNumber)
+            ->setPhone($phone)
+            ->setBirthday($birthday)
+            ->setLocation($location)
+            ->setCreatedAt($createdAt)
+            ->setDeleted(0)
+        ;
 
+        if($memberEntityService->store($newMember)){
 
+            if($gun){
+                $memberDepartmentEntityService->createNewMembership($newMember, 1);
+            }
+
+            if($bow){
+                $memberDepartmentEntityService->createNewMembership($newMember, 2);
+            }
+
+            if($airPressure){
+                $memberDepartmentEntityService->createNewMembership($newMember, 3);
+            }
+
+            $message = "Created new member with ID " . $newMember->getId();
+            $status = Response::HTTP_OK;
+        }else{
+            $message = "Could not create new Member.";
+            $status = Response::HTTP_BAD_REQUEST;
+        }
+
+        return $this->redirectToRoute('members', [
+            $message,
+            $status
+        ]);
 
     }
 

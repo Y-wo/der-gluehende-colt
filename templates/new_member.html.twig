@@ -10,7 +10,7 @@
         tab : 'members'
     }%}
 
-{#    <script type="module" src="js/newMember.js"></script>#}
+    <script type="module" src="js/newMember.js"></script>
 
     <div class="container-md member-div">
 
@@ -36,10 +36,10 @@
                 <input name="houseNumber" type="text" required>
                 <label for="houseNumber">Hausnummer</label>
 
-                <select name="addressSelect">
-                    <option>test</option>
-                </select>
-                <label for="addressSelect">PLZ, Ort</label>
+{#                <select class="select-address" name="addressSelect">#}
+{#                    <option class="empty-address-selection"></option>#}
+{#                </select>#}
+{#                <label for="addressSelect">PLZ, Ort</label>#}
 
                 <input name="zip" type="text">
                 <label for="zip">Postleitzahl</label>
@@ -70,8 +70,11 @@
                     <label for="airPressure">Luftdruck</label>
                 </div>
 
+                <div class="pt-5 d-flex justify-content-between row" >
+                    <a class="col-4 btn bg-danger " href="{{ path('members') }}">Abbrechen</a>
+                    <input class="col-4 btn bg-success" type="submit" value="Anlegen" name="create">
+                </div>
 
-                <input type="submit" value="Anlegen" name="create">
             </form>
         </div>
 

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\MemberEntity;
 use App\Service\AdminEntityService;
 use App\Service\AttendanceEntityService;
 use App\Service\AuthenticationService;
@@ -38,6 +39,31 @@ class IndexController extends AbstractController
     public function newMember(): Response
     {
         return $this->render("new_member.html.twig");
+    }
+
+    #[Route(path: '/member/{id}', name: 'member')]
+    public function member(
+        MemberEntityService $memberEntityService,
+        LocationEntityService $locationEntityService,
+        int $id
+    ): Response
+    {
+
+//        HIIIIIIIIIER
+
+
+        /** @var MemberEntity $member */
+        $member = $memberEntityService->get($id);
+//        $location = $member->getLocation()->toArray();
+        $locationId = $member->getLocation()->getId();
+        $location = $locationEntityService->getLocation($locationId);
+        $attendances = $member->getAttendanceEntities()->toArray();
+
+
+        return $this->render("single_member.html.twig", [
+            'member' => $member,
+            'location' => $location
+        ]);
     }
 
 

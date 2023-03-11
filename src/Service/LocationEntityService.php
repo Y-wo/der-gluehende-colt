@@ -15,4 +15,33 @@ class LocationEntityService extends AbstractEntityService
     }
 
     public static $entityFqn = LocationEntity::class;
+
+
+    public function getLocationsByZip(int $zip){
+        $queryBuilder = $this
+            ->getRepository()
+            ->createQueryBuilder('r');
+
+        $query = $queryBuilder
+            ->where('r.zip = :zip')
+            ->setParameter('zip', $zip)
+            ->getQuery();
+
+        return $query->execute();
+    }
+
+    public function getLocation(int $id){
+        $queryBuilder = $this
+            ->getRepository()
+            ->createQueryBuilder('r');
+
+        $query = $queryBuilder
+            ->where('r.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery();
+
+        return $query->execute();
+    }
+
+
 }

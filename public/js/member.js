@@ -1,5 +1,6 @@
 'use strict';
 import {
+    localPath,
     apiPath,
     countDepartments,
     attendencesPerYearForGunAuhorization
@@ -123,6 +124,7 @@ document.addEventListener("DOMContentLoaded", async function(){
 
         // html table elements
         const tableRowMember = $(`<tr class='tr-${member.id}'></tr>`)
+        const tableDataId = $(`<a href="${localPath}member/${member.id}"><td> ${member.id} </td></a>`)
         const tableDataFirstName = $(`<td> ${member.firstName} </td>`)
         const tableDataLastName = $(`<td> ${member.lastName} </td>`)
         const tableDataDepartments = $(`<td> ${departmentNames} </td>`)
@@ -130,7 +132,7 @@ document.addEventListener("DOMContentLoaded", async function(){
         const tableDataForCheckboxes = $(`<td></td>`)
 
         tableBodyMembers.append(tableRowMember)
-        tableRowMember.append(tableDataFirstName, tableDataLastName, tableDataDepartments, tableDataForCheckboxes)
+        tableRowMember.append(tableDataId, tableDataFirstName, tableDataLastName, tableDataDepartments, tableDataForCheckboxes)
 
         // creates checkbox for each department
         // adds function to set/unset attendance
