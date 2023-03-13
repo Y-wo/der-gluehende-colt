@@ -1,7 +1,7 @@
 'use strict'
-
 import {apiPath} from "./configuration.js";
 import {getJwtReponse} from "./jwtService.js";
+
 
 
 document.addEventListener("DOMContentLoaded", async function(){

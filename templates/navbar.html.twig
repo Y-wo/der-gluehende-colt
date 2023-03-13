@@ -19,8 +19,10 @@
                 <div class="navbar-nav">
                     <a class="nav-link {% if tab == 'members' %} fw-bold {% endif %}"
                        aria-current="page" href="{{ path('members') }}">Mitglieder</a>
-                    <a class="nav-link btn btn-outline-dark" href="signin.html" tabindex="-1" aria-disabled="true"
-                       data-bs-toggle="modal" data-bs-target="#exampleModal">Anmelden</a>
+                    <a class="nav-link btn btn-outline-dark" href="{{ path('login') }}"
+                       >Anmelden</a>
+                    <a class="nav-link btn btn-outline-dark" href="{{ path('logout') }}"
+                    >Abmelden</a>
                     <!-- Modal -->
                     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
                          aria-hidden="true">

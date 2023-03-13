@@ -34,6 +34,16 @@ class IndexController extends AbstractController
         ]);
     }
 
+    #[Route(path: '/logout', name: 'logout')]
+    public function logout(
+        Request $request
+    ): Response
+    {
+
+        return $this->render("logout.html.twig");
+    }
+
+
     #[Route(path: '/login-check', name: 'login_check')]
     public function loginCheck(
         MemberEntityService $memberEntityService,

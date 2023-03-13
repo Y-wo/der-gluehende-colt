@@ -90,36 +90,11 @@ class ApiController extends AbstractController
     {
         $dataFromClient = $request->getContent();
         $dataFromClient = json_decode($dataFromClient,true);
-        $sentPassword = $dataFromClient['password'];
-        $sentMemberId = $dataFromClient['memberId'];
-
-        $member = $memberEntityService->get($sentMemberId);
-
-        if(!$member) {
-            $message = "Login nicht möglich.";
-            return new Response($message, Response::HTTP_BAD_REQUEST);
-        }
-
-        $isAdmin = $adminEntityService->isAdmin($member->getId());
-
-        if(!$isAdmin){
-            $message = "Login nicht möglich.";
-            return new Response($message, Response::HTTP_BAD_REQUEST);
-        }
-
-        $sentHashedPassword = hash('md5', $sentPassword);
-        $storedPassword = $adminEntityService->getPasswortByMemberId($sentMemberId);
-
-        if($sentHashedPassword == $storedPassword){
-            return new Response($jwtService->createJwt(), Response::HTTP_OK);
-        }else{
-            $message = "Login nicht möglich.";
-            return new Response($message, Response::HTTP_BAD_REQUEST);
-        }
+        $sentJwt = $dataFromClient['jwt'] ?? "";
+        $isAuthenticated = $jwtService->checkSentJwt($sentJwt);
+        $isAuthenticated = $isAuthenticated ? "true" : "false";
+        return new Response($isAuthenticated);
     }
-
-
-
 
 
     #[Route(path: '/member', name: 'get_members')]

@@ -19,11 +19,23 @@ export async function getJwtReponse(memberId, password){
 }
 
 export function checkJwtStatus(){
-
-    if()
-
     let jwt = localStorage.getItem('jwt')
     console.log(jwt)
+
+    return fetch(apiPath + "check-jwt",
+        {
+            method: "POST",
+            headers: {
+            },
+            body:
+                JSON.stringify({
+                    jwt: jwt,
+                })
+        }
+    )
+        .then(async function (response) {
+            return  response;
+        })
 }
 
 export async function removeJwtFromLocalStorage(){

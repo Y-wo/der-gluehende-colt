@@ -39,6 +39,7 @@
 - Code bereinigen
 - gucken, ob css anders wirkt auf /member oder /index.php/member
 - attendencesPerYearForGunAuhorization auf 12 erhöhen
+- login Route anpassen in public/js/base.js:17 auf dem server
 
 ## Befehle
 - für jwt:

@@ -50,4 +50,29 @@ class JwtService
         }
         return false;
     }
+
+    //checks sent jwt
+    public function checkSentJwt(
+        string $jwt
+    )
+//    : bool
+    {
+
+        try{
+            $decoded = JWT::decode($jwt, new Key($this->key, 'HS256')) ?? false;
+        }catch(\Exception $exception){
+            return false;
+        }
+
+
+        $decoded_array = (array) $decoded;
+
+        if($decoded_array['role'] == 'admin'){
+            return true;
+        }
+        return false;
+    }
+
+
+
 }
