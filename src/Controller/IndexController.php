@@ -35,7 +35,7 @@ class IndexController extends AbstractController
         return $this->render("members.html.twig");
     }
 
-    #[Route(path: '/new-members', name: 'new_member')]
+    #[Route(path: '/new-member', name: 'new_member')]
     public function newMember(): Response
     {
         return $this->render("new_member.html.twig");
@@ -48,23 +48,36 @@ class IndexController extends AbstractController
         int $id
     ): Response
     {
-
-//        HIIIIIIIIIER
-
-
         /** @var MemberEntity $member */
         $member = $memberEntityService->get($id);
-//        $location = $member->getLocation()->toArray();
-        $locationId = $member->getLocation()->getId();
-        $location = $locationEntityService->getLocation($locationId);
         $attendances = $member->getAttendanceEntities()->toArray();
+        $reversedAttendances = array_reverse($attendances);
 
-
-        return $this->render("single_member.html.twig", [
+        return $this->render("member.html.twig", [
             'member' => $member,
-            'location' => $location
+            'attendances' => $reversedAttendances
         ]);
     }
+
+    #[Route(path: '/edit-member/{id}', name: 'edit_member')]
+    public function editMember(
+        MemberEntityService $memberEntityService,
+        LocationEntityService $locationEntityService,
+        int $id
+    ): Response
+    {
+        /** @var MemberEntity $member */
+        $member = $memberEntityService->get($id);
+        $attendances = $member->getAttendanceEntities()->toArray();
+        $reversedAttendances = array_reverse($attendances);
+
+        return $this->render("member.html.twig", [
+            'member' => $member,
+            'attendances' => $reversedAttendances
+        ]);
+    }
+
+
 
 
     #[Route(path: '/login', name: 'login')]

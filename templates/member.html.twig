@@ -1,0 +1,42 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+    Mitglieder
+{% endblock title %}
+
+{% block main_content %}
+
+    {% include 'navbar.html.twig' with {
+        tab : 'members'
+    }%}
+
+    <div class="container-md member-div">
+
+        <h2 class="pb-5 text-decoration-underline">Mitglied:</h2>
+
+            <p>Name: {{ member.firstName }} {{ member.lastName }}</p>
+            <p>Mitgliedsnummer: {{ member.id }} </p>
+            <p>Adresse: {{ member.street }} {{ member.houseNumber }}, {{ member.location.zip}} {{ member.location.locus}} </p>
+            <p>E-Mail: {{ member.email }} </p>
+            <p>Telefon: {{ member.phone }} </p>
+            <p>Geburtstag: {{ member.birthday|date("d.m.Y") }} </p>
+            <p>Mitglied seit: {{ member.createdAt|date("d.m.Y") }} </p>
+
+        <div class="w-100 d-flex justify-content-end">
+            <div class="w-25">
+                <a class="btn bg-success col-4" href="{{ path('members') }}">Zurück</a>
+                <a class="btn bg-info col-4" href="#">Bearbeiten</a>
+            </div>
+        </div>
+
+        <h3 class="py-5 text-decoration-underline">Anwesenheiten</h3>
+
+        {% for attendance in attendances %}
+
+            <p> {{ attendance.date|date("d.m.Y - h:m") }} Uhr - {{ attendance.department.name }}</p>
+
+        {% endfor %}
+
+    </div>
+
+{% endblock %}

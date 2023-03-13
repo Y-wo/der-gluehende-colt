@@ -56,8 +56,6 @@ function countMembersGunAttendanceLastYear(attendances){
     const oneYearAgoMs = new Date(new Date().setFullYear(new Date().getFullYear() - 1)).getTime();
     const todayMs = new Date().getTime();
 
-    console.log(attendances)
-
     for (let entry of attendances){
         // only count if attendance relates to department "gun"
         if(entry.department.name === "Schusswaffen"){
@@ -124,7 +122,7 @@ document.addEventListener("DOMContentLoaded", async function(){
 
         // html table elements
         const tableRowMember = $(`<tr class='tr-${member.id}'></tr>`)
-        const tableDataId = $(`<a href="${localPath}member/${member.id}"><td> ${member.id} </td></a>`)
+        const tableDataId = $(`<td><a href="${localPath}member/${member.id}"> ${member.id} </a></td>`)
         const tableDataFirstName = $(`<td> ${member.firstName} </td>`)
         const tableDataLastName = $(`<td> ${member.lastName} </td>`)
         const tableDataDepartments = $(`<td> ${departmentNames} </td>`)
