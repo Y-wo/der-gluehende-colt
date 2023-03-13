@@ -1,0 +1,86 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+    Mitglieder
+{% endblock title %}
+
+{% block main_content %}
+
+    {% include 'navbar.html.twig' with {
+        tab : 'members'
+    }%}
+
+    <div class="container-md member-div">
+
+        <h2 class="pb-5 text-decoration-underline">Mitglied (ID: {{ member.id }}):</h2>
+
+        <div class="d-flex justify-content-center">
+
+            <form class="d-flex flex-column w-25" action="{{ path('api_save_member', { id: member.id}) }}" method="post">
+                <input name="firstName" type="text" value="{{ member.firstName }}" required>
+                <label for="firstName">Vorname</label>
+
+                <input name="lastName" type="text" value="{{ member.lastName }}" required>
+                <label for="lastName">Nachname</label>
+
+                <input name="email" type="email" value="{{ member.email }}" required>
+                <label for="email">E-Mail</label>
+
+                <input name="street" type="text" value="{{ member.street }}" required>
+                <label for="street">Straße</label>
+
+                <input name="houseNumber" type="text" value="{{ member.houseNumber }}" required>
+                <label for="houseNumber">Hausnummer</label>
+
+                <input name="zip" type="text "value="{{ member.location.zip }}" required>
+                <label for="zip">Postleitzahl</label>
+
+                <input name="locus" type="text" value="{{ member.location.locus }}" required>
+                <label for="locus">Ort</label>
+
+                <input name="phone" type="number" value="{{ member.phone }}"  required>
+                <label for="phone">TelefonNummer</label>
+
+                <input name="birthday" type="date" value="{{ (member.birthday|date('Y-m-d')) }}"  required>
+                <label for="birthday">Geburtstag</label>
+
+                <h3>Abteilungen</h3>
+
+                <div class="d-flex">
+                    <input name="gun" type="checkbox" value="true" {% if 1 in member_departments_ids %} checked {% endif %}>
+                    <label for="gun">Schusswaffen</label>
+                </div>
+
+                <div class="d-flex">
+                    <input name="bow" type="checkbox" value="true" {% if 2 in member_departments_ids %} checked {% endif %}>
+                    <label for="bow">Bogen</label>
+                </div>
+
+                <div class="d-flex">
+                    <input name="airPressure" type="checkbox" value="true" {% if 3 in member_departments_ids %} checked {% endif %}>
+                    <label for="airPressure">Luftdruck</label>
+                </div>
+
+                <div class="pt-5 d-flex justify-content-between row" >
+{#                    <a class="col-4 btn bg-danger " href="{{ path('members') }}">Abbrechen</a>#}
+{#                    <input class="col-4 btn bg-success" type="submit" value="Anlegen" name="create">#}
+
+                    <a class="btn bg-success col-4" href="{{ path('member', { id: member.id}) }}">Zurück</a>
+                    <input class="col-4 btn bg-info" type="submit" value="Speichern" name="save">
+
+                </div>
+            </form>
+        </div>
+
+
+{#        <div class="w-100 d-flex justify-content-end">#}
+{#            <div class="w-25">#}
+{#                <a class="btn bg-success col-4" href="{{ path('member', { id: member.id}) }}">Zurück</a>#}
+{#                <a class="btn bg-info col-4" href="#">Bearbeiten</a>#}
+{#            </div>#}
+{#        </div>#}
+
+
+    </div>
+
+{% endblock %}

@@ -21,11 +21,18 @@
             <p>Telefon: {{ member.phone }} </p>
             <p>Geburtstag: {{ member.birthday|date("d.m.Y") }} </p>
             <p>Mitglied seit: {{ member.createdAt|date("d.m.Y") }} </p>
+            <p>Abteilungen:
+                {% for entry in member_departments %}
+                    <br> - {{ entry.department.name }}
+                {% endfor %}
+            </p>
+
+        {% dump(member_departments) %}
 
         <div class="w-100 d-flex justify-content-end">
             <div class="w-25">
                 <a class="btn bg-success col-4" href="{{ path('members') }}">Zurück</a>
-                <a class="btn bg-info col-4" href="#">Bearbeiten</a>
+                <a class="btn bg-info col-4" href="{{ path('edit_member', { id: member.id }) }}">Bearbeiten</a>
             </div>
         </div>
 

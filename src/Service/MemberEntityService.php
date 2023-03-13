@@ -5,6 +5,7 @@ namespace App\Service;
 use App\Entity\AttendanceEntity;
 use App\Entity\MemberEntity;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\Validator\Constraints\Date;
 use Symfony\Component\Validator\Constraints\DateTime;
@@ -103,5 +104,24 @@ class MemberEntityService extends AbstractEntityService
         $member->setDeleted(true);
     }
 
+    public function createRequestMemberAssociativeArray(
+        Request $request
+    ): array {
+        return [
+            'firstName' => $request->request->get('firstName'),
+            'lastName' => $request->request->get('lastName'),
+            'email' => $request->request->get('email'),
+            'street' =>$request->get('street'),
+            'houseNumber' => $request->request->get('houseNumber'),
+            'zip' => $request->request->get('zip'),
+            'locus' => $request->request->get('locus'),
+            'phone' => $request->request->get('phone'),
+            'birthday' => new \DateTime($request->request->get('birthday')),
+            'gun' => $request->request->get('gun'),
+            'bow' => $request->request->get('bow'),
+            'airPressure' => $request->request->get('airPressure'),
+            'createdAt' => new \DateTimeImmutable(),
+        ];
+    }
 
 }

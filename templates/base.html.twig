@@ -17,7 +17,7 @@
 
 {#    / endDeleteThis#}
 
-{#  INFO: Delete this, if app is on server and css/js is working without webpack #}
+{#  INFO: Delete this, if app is on server and styles/js is working without webpack #}
 
         {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
     {#    {% block stylesheets %}#}
@@ -39,7 +39,9 @@
     {% block page_specific_script %}
     {% endblock %}
 
-    <link rel="stylesheet" href="css/style.css">
+{#    <link rel="stylesheet" href="styles/style.styles">#}
+    <link rel="stylesheet" href="{{ asset('assets/styles/style.css') }}">
+
 
 
 </head>

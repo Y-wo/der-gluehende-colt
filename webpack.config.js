@@ -23,7 +23,7 @@ Encore
      * ENTRY CONFIG
      *
      * Each entry will result in one JavaScript file (e.g. app.js)
-     * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
+     * and one CSS file (e.g. app.styles) if your JavaScript imports CSS.
      */
     .addEntry('app', './assets/app.js')
 
@@ -47,7 +47,7 @@ Encore
     .cleanupOutputBeforeBuild()
     .enableBuildNotifications()
     .enableSourceMaps(!Encore.isProduction())
-    // enables hashed filenames (e.g. app.abc123.css)
+    // enables hashed filenames (e.g. app.abc123.styles)
     .enableVersioning(Encore.isProduction())
 
     // configure Babel

@@ -19,7 +19,7 @@ class MemberDepartmentEntity extends AbstractEntity
     #[Ignore]
     private ?MemberEntity $member = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(fetch: "EAGER")]
     #[ORM\JoinColumn(nullable: false)]
     private ?DepartmentEntity $department = null;
 

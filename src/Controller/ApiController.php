@@ -147,6 +147,102 @@ class ApiController extends AbstractController
     }
 
 
+    #[Route(path: '/save-member/{id}', name: 'save_member')]
+    public function saveMember(
+        MemberEntityService $memberEntityService,
+        LocationEntityService $locationEntityService,
+        Request $request,
+        int $id
+    ): Response
+    {
+
+        $memberInfos = $memberEntityService->createRequestMemberAssociativeArray($request);
+        /** @var MemberEntity $member */
+        $member = $memberEntityService->get($id);
+
+
+        if($member->getFirstname() != $memberInfos['firstName']){
+            $member->setFirstName($memberInfos['firstName']);
+        };
+        if($member->getLastname() != $memberInfos['lastName']){
+            $member->setFirstName($memberInfos['lastName']);
+        };
+        if($member->getEmail() != $memberInfos['email']){
+            $member->setEmail($memberInfos['email']);
+        };
+        if($member->getStreet() != $memberInfos['street']){
+            $member->setStreet($memberInfos['street']);
+        };
+        if($member->getHouseNumber() != $memberInfos['houseNumber']){
+            $member->setHouseNumber($memberInfos['houseNumber']);
+        };
+
+
+        $membersZip = $member->getLocation()->getZip();
+
+        if($membersZip != $memberInfos['zip'] ){
+            // check if locationEntity already exists and if not create new one
+            $locations = $locationEntityService->getLocationsByZip($memberInfos['zip']);
+            if(count($locations) == 0)
+            {
+                $location = new LocationEntity();
+                $location
+                    ->setZip($memberInfos['zip'])
+                    ->setLocus($memberInfos['locus'])
+                ;
+                $locationEntityService->store($location);
+            }else{
+                $location = $locations[0];
+            }
+
+            $member->setLocation($location);
+        }
+
+
+
+        if($memberEntityService->store($member)){
+
+
+            if($memberInfos['gun'] == true){
+                // CHECK IF MEMBERSHIP ALREADY EXISTS
+            }
+            if($memberInfos['bow'] == true){
+
+            }
+            if($memberInfos['airPressure'] == true){
+
+            }
+
+//            if($gun){
+//                $memberDepartmentEntityService->createNewMembership($newMember, 1);
+//            }
+//
+//            if($bow){
+//                $memberDepartmentEntityService->createNewMembership($newMember, 2);
+//            }
+//
+//            if($airPressure){
+//                $memberDepartmentEntityService->createNewMembership($newMember, 3);
+//            }
+
+            $message = "Created new member with ID " . $member->getId();
+            $status = Response::HTTP_OK;
+        }else{
+            $message = "Could not create new Member.";
+            $status = Response::HTTP_BAD_REQUEST;
+        }
+
+        return $this->redirectToRoute('member', [
+                'id' => $member->getId(),
+                'message' => $message,
+                'status' => $status
+            ]
+
+        );
+    }
+
+
+
     #[Route(path: '/birthdays', name: 'get_birthdays')]
     public function getBirthdays(
         MemberEntityService $memberEntityService,

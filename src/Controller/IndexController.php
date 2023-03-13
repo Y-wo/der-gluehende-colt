@@ -52,10 +52,12 @@ class IndexController extends AbstractController
         $member = $memberEntityService->get($id);
         $attendances = $member->getAttendanceEntities()->toArray();
         $reversedAttendances = array_reverse($attendances);
+        $memberDepartments = $member->getMemberDepartmentEntities()->toArray();
 
         return $this->render("member.html.twig", [
             'member' => $member,
-            'attendances' => $reversedAttendances
+            'attendances' => $reversedAttendances,
+            'member_departments' => $memberDepartments
         ]);
     }
 
@@ -68,14 +70,20 @@ class IndexController extends AbstractController
     {
         /** @var MemberEntity $member */
         $member = $memberEntityService->get($id);
-        $attendances = $member->getAttendanceEntities()->toArray();
-        $reversedAttendances = array_reverse($attendances);
+        $memberDepartments = $member->getMemberDepartmentEntities()->toArray();
+        $memberDepartmentIds = [];
 
-        return $this->render("member.html.twig", [
+        // create array for departmentIds where member has membership
+        foreach($memberDepartments as $entry){
+            $memberDepartmentIds[] = $entry->getDepartment()->getId();
+        }
+
+        return $this->render("edit_member.html.twig", [
             'member' => $member,
-            'attendances' => $reversedAttendances
+            'member_departments_ids' => $memberDepartmentIds
         ]);
     }
+
 
 
 
