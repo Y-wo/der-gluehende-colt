@@ -1,0 +1,38 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+    Mitglieder
+{% endblock title %}
+
+{% block main_content %}
+
+    {% include 'navbar.html.twig' with {
+        tab : 'members'
+    }%}
+
+    <div class="container-md member-div">
+
+        <h2 class="text-decoration-underline">Neuer Administrator {{ member.firstName }} {{ member.lastName }} (ID: {{ member.id }})</h2>
+
+        <div class="d-flex justify-content-center">
+            <form class="d-flex flex-column w-25" action="{{ path('api_create_admin', {id: member.id}) }}" method="post">
+
+                <h3>Passwort</h3>
+
+                <input name="password" type="password" required>
+                <label for="password">Passwort</label>
+
+                <input name="passwordConfirmation" type="password" required>
+                <label for="passwordConfirmation">Passwort Wiederholung</label>
+
+                <div class="pt-5 d-flex justify-content-between row" >
+                    <a class="col-4 btn bg-danger " href="{{ path('member', { id: member.id }) }}">Abbrechen</a>
+                    <input class="col-4 btn bg-success" type="submit" value="Anlegen" name="create">
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+
+{% endblock %}

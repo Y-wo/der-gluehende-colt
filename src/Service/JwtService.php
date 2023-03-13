@@ -14,11 +14,11 @@ use Symfony\Component\HttpFoundation\Request;
 
 class JwtService
 {
-    private string $key;
+    private string $key = "test";
 
     public function __construct(protected ParameterBagInterface $parameterBag)
     {
-        $this->key = $this->parameterBag->get('jwt_key');
+//        $this->key = $this->parameterBag->get('jwt_key');
     }
 
     public function createJwt() : String

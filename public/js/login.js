@@ -1,26 +1,34 @@
 'use strict'
-document.addEventListener("DOMContentLoaded", function(){
+
+import {apiPath} from "./configuration.js";
+import {getJwtReponse} from "./jwtService.js";
+
+
+document.addEventListener("DOMContentLoaded", async function(){
+    const submitButton = $('.submitButton')
+
+    const passwordInput = $('.password')
+    const memberIdInput = $('.memberId')
 
 
 
-    let jwtPath = "http://127.0.0.1/der-gluehende-colt/der-gluehende-colt/public/test"
+    submitButton.click(async function() {
+        let password = passwordInput.val()
+        let memberId = memberIdInput.val()
 
-    function getJwt(){
-        fetch(jwtPath,
-            {
-                method: "POST",
-                headers: {
-                },
-                body:
-                    JSON.stringify({
-                    })
-            }
-        )
-            .then(async function (response) {
-                console.log(await response.text())
-            })
-    }
+        let getJwtResponse = await getJwtReponse(memberId, password)
 
+        console.log(getJwtResponse.status)
 
-    getJwt()
+        // store jwt in localStorage if status is ok
+        if(getJwtResponse.status === 200){
+            let jwt = await getJwtResponse.text()
+            console.log(jwt)
+            localStorage.setItem('jwt', jwt)
+
+        //     how to get storage by key:
+        //     console.log(localStorage.getItem('jwt'))
+
+        }
+    })
 })

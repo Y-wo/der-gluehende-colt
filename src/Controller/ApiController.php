@@ -10,6 +10,7 @@ use App\Entity\MemberEntity;
 use App\Service\AdminEntityService;
 use App\Service\AttendanceEntityService;
 use App\Service\DepartmentEntityService;
+use App\Service\JwtService;
 use App\Service\LocationEntityService;
 use App\Service\MemberDepartmentEntityService;
 use App\Service\MemberEntityService;
@@ -36,6 +37,89 @@ class ApiController extends AbstractController
         $serializedObject = $serializerService->serializeObject($testEntity);
         return new JsonResponse($serializedObject, 200, [], true);
     }
+
+    #[Route(path: '/get-jwt', name: 'get_jwt')]
+    public function getJwt(
+        SerializerService $serializerService,
+        MemberDepartmentEntityService $memberDepartmentService,
+        MemberEntityService $memberEntityService,
+        AdminEntityService $adminEntityService,
+        JwtService $jwtService,
+        Request $request
+    ): Response
+    {
+        $dataFromClient = $request->getContent();
+        $dataFromClient = json_decode($dataFromClient,true);
+        $sentPassword = $dataFromClient['password'];
+        $sentMemberId = $dataFromClient['memberId'];
+
+        $member = $memberEntityService->get($sentMemberId);
+
+        if(!$member) {
+            $message = "Login nicht möglich.";
+            return new Response($message, Response::HTTP_BAD_REQUEST);
+        }
+
+        $isAdmin = $adminEntityService->isAdmin($member->getId());
+
+        if(!$isAdmin){
+            $message = "Login nicht möglich.";
+            return new Response($message, Response::HTTP_BAD_REQUEST);
+        }
+
+        $sentHashedPassword = hash('md5', $sentPassword);
+        $storedPassword = $adminEntityService->getPasswortByMemberId($sentMemberId);
+
+        if($sentHashedPassword == $storedPassword){
+            return new Response($jwtService->createJwt(), Response::HTTP_OK);
+        }else{
+            $message = "Login nicht möglich.";
+            return new Response($message, Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    #[Route(path: '/check-jwt', name: 'check_jwt')]
+    public function checkJwt(
+        SerializerService $serializerService,
+        MemberDepartmentEntityService $memberDepartmentService,
+        MemberEntityService $memberEntityService,
+        AdminEntityService $adminEntityService,
+        JwtService $jwtService,
+        Request $request
+    ): Response
+    {
+        $dataFromClient = $request->getContent();
+        $dataFromClient = json_decode($dataFromClient,true);
+        $sentPassword = $dataFromClient['password'];
+        $sentMemberId = $dataFromClient['memberId'];
+
+        $member = $memberEntityService->get($sentMemberId);
+
+        if(!$member) {
+            $message = "Login nicht möglich.";
+            return new Response($message, Response::HTTP_BAD_REQUEST);
+        }
+
+        $isAdmin = $adminEntityService->isAdmin($member->getId());
+
+        if(!$isAdmin){
+            $message = "Login nicht möglich.";
+            return new Response($message, Response::HTTP_BAD_REQUEST);
+        }
+
+        $sentHashedPassword = hash('md5', $sentPassword);
+        $storedPassword = $adminEntityService->getPasswortByMemberId($sentMemberId);
+
+        if($sentHashedPassword == $storedPassword){
+            return new Response($jwtService->createJwt(), Response::HTTP_OK);
+        }else{
+            $message = "Login nicht möglich.";
+            return new Response($message, Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+
+
 
 
     #[Route(path: '/member', name: 'get_members')]
@@ -162,11 +246,13 @@ class ApiController extends AbstractController
         $member = $memberEntityService->get($id);
 
 
+
+
         if($member->getFirstname() != $memberInfos['firstName']){
             $member->setFirstName($memberInfos['firstName']);
         };
         if($member->getLastname() != $memberInfos['lastName']){
-            $member->setFirstName($memberInfos['lastName']);
+            $member->setLastName($memberInfos['lastName']);
         };
         if($member->getEmail() != $memberInfos['email']){
             $member->setEmail($memberInfos['email']);
@@ -174,6 +260,13 @@ class ApiController extends AbstractController
         if($member->getStreet() != $memberInfos['street']){
             $member->setStreet($memberInfos['street']);
         };
+        if($member->getBirthday() != $memberInfos['birthday']){
+            $member->setBirthday($memberInfos['birthday']);
+        };
+        if($member->getPhone() != $memberInfos['phone']){
+            $member->setPhone($memberInfos['phone']);
+        };
+
         if($member->getHouseNumber() != $memberInfos['houseNumber']){
             $member->setHouseNumber($memberInfos['houseNumber']);
         };
@@ -372,4 +465,44 @@ class ApiController extends AbstractController
         $memberDepartment = $memberDepartmentEntityService->getAll();
         return $responseService->convertObjectToJsonResponse($memberDepartment);
     }
+
+    #[Route(path: '/create-admin/{id}', name: 'create_admin')]
+    public function createAdmin(
+        MemberEntityService $memberEntityService,
+        LocationEntityService $locationEntityService,
+        AdminEntityService $adminEntityService,
+        Request $request,
+        int $id
+    ): Response
+    {
+        $password = $request->request->get('password');
+        $passwordConfirmation = $request->request->get('passwordConfirmation');
+
+        if ($password == $passwordConfirmation){
+            $adminEntityService->createAdmin($id, $password);
+
+            $message = "New Admin created with ID " . $id;
+            return $this->redirectToRoute('member', [
+                'id' => $id,
+                'message' => $message,
+            ]);
+        }
+            $message = "Could not create new admin " . $id;
+            return $this->redirectToRoute('member', [
+                'id' => $id,
+                'message' => $message,
+            ]);
+    }
+
+    #[Route(path: '/remove-admin/{id}', name: 'remove_admin')]
+    public function removeAdmin(
+        AdminEntityService $adminEntityService,
+        ResponseService $responseService,
+        int $id
+    ): Response
+    {
+        $adminEntityService->removeAdmin($id);
+        return new Response("yo gelöscht");
+    }
+
 }

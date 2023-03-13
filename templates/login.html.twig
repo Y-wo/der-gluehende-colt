@@ -1,8 +1,8 @@
 {% extends 'base.html.twig' %}
 
-{% block page_specific_script %}
-    <script src="js/login.js"></script>
-{% endblock %}
+{#{% block page_specific_script %}#}
+{#    <script src="js/login.js"></script>#}
+{#{% endblock %}#}
 
 {% block title %}
     Login
@@ -12,7 +12,27 @@
 
     {% include 'navbar.html.twig' %}
 
-    login du faule murte
+    <script type="module" src="js/login.js"></script>
+{#    <script type="module" src="js/members.js"></script>#}
+
+
+    {% if message is defined and message is not null %}
+        <p class="info-message">{{ message }}</p>
+    {% endif %}
+
+{#{{ path('login_check') }}#}
+    <form action="" method="post">
+        <input type="number" class="memberId" name="memberId">
+        <label for="memberId">Mitgliedsnummer</label>
+
+        <input type="password" name="password" class="password">
+        <label for="password">Passwort</label>
+
+{#        <input type="submit" class="submitButton">#}
+{#        #}
+    </form>
+
+    <button class="submitButton">login</button>
 
 
 {% endblock %}

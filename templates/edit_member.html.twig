@@ -14,6 +14,10 @@
 
         <h2 class="pb-5 text-decoration-underline">Mitglied (ID: {{ member.id }}):</h2>
 
+        {% if isAdmin is defined and isAdmin == true %}
+            <p class="info-text">Administrator</p>
+        {% endif %}
+
         <div class="d-flex justify-content-center">
 
             <form class="d-flex flex-column w-25" action="{{ path('api_save_member', { id: member.id}) }}" method="post">
@@ -62,24 +66,17 @@
                 </div>
 
                 <div class="pt-5 d-flex justify-content-between row" >
-{#                    <a class="col-4 btn bg-danger " href="{{ path('members') }}">Abbrechen</a>#}
-{#                    <input class="col-4 btn bg-success" type="submit" value="Anlegen" name="create">#}
-
                     <a class="btn bg-success col-4" href="{{ path('member', { id: member.id}) }}">Zurück</a>
-                    <input class="col-4 btn bg-info" type="submit" value="Speichern" name="save">
 
+                    {% if isAdmin == true %}
+                        <a class="btn bg-warning col-4">Passwort ändern</a>
+                    {% else %}
+                        <a href="{{ path('create_admin', {id: member.id}) }}" class="btn bg-warning col-4">Zu Admin machen</a>
+                    {% endif %}
+                    <input class="col-4 btn bg-info" type="submit" value="Speichern" name="save">
                 </div>
             </form>
         </div>
-
-
-{#        <div class="w-100 d-flex justify-content-end">#}
-{#            <div class="w-25">#}
-{#                <a class="btn bg-success col-4" href="{{ path('member', { id: member.id}) }}">Zurück</a>#}
-{#                <a class="btn bg-info col-4" href="#">Bearbeiten</a>#}
-{#            </div>#}
-{#        </div>#}
-
 
     </div>
 

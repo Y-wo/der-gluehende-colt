@@ -28,6 +28,7 @@ class MemberEntityService extends AbstractEntityService
             ->getRepository(self::$entityFqn)
             ->createQueryBuilder('r')
             ->select('r')
+            ->where('r.deleted = 0')
         ;
 
         $query = $queryBuilder->getQuery();
@@ -101,7 +102,9 @@ class MemberEntityService extends AbstractEntityService
     public function setMemberDeleted(int $id){
         /**@var MemberEntity $member*/
         $member = $this->get($id);
-        $member->setDeleted(true);
+        $member->setDeleted(1);
+        $this->entityManager->persist($member);
+        $this->entityManager->flush();
     }
 
     public function createRequestMemberAssociativeArray(
@@ -133,5 +136,6 @@ class MemberEntityService extends AbstractEntityService
         }
         return false;
     }
+
 
 }

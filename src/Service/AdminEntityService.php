@@ -5,16 +5,19 @@ namespace App\Service;
 use App\Entity\AdminEntity;
 use App\Entity\MemberEntity;
 use Doctrine\ORM\EntityManagerInterface;
+use http\Env\Response;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 class AdminEntityService extends AbstractEntityService
 {
-    public function __construct(EntityManagerInterface $entityManager, SluggerInterface $slugger)
+    public function __construct(EntityManagerInterface $entityManager, SluggerInterface $slugger, MemberEntityService $memberEntityService)
     {
         parent::__construct($entityManager, $slugger);
+        $this->memberEntityService = $memberEntityService;
     }
 
     public static $entityFqn = AdminEntity::class;
+    public $memberEntityService;
 
     public function getEmail() : String
     {
@@ -49,9 +52,6 @@ class AdminEntityService extends AbstractEntityService
         }else{
             return $password[0]['password'];
         }
-
-
-//        return $password[0]['password'];
     }
 
 
@@ -74,23 +74,56 @@ class AdminEntityService extends AbstractEntityService
         return $password;
     }
 
-    public function getTest()
-    {
+
+    public function isAdmin(int $memberId){
         $queryBuilder = $this
             ->entityManager
             ->getRepository(self::$entityFqn)
             ->createQueryBuilder('r')
-            ->innerJoin('r.member', 'm')
-            ->select()
-            ->andWhere('m.email = :member_email')
-            ->setParameter('member_email', 'asdf')
-            ;
+            ->andWhere('r.member = :memberId')
+            ->setParameter('memberId', $memberId)
+        ;
 
         $query = $queryBuilder->getQuery();
+        $result = $query->execute();
+        return count($result) > 0;
+    }
 
+    public function createAdmin(int $memberId, string $password):self{
+        $member = $this->memberEntityService->get($memberId);
+        $newAdmin = new AdminEntity();
+
+        // hash password
+        $hashedPassword = hash('md5', $password);
+
+        $newAdmin
+            ->setMember($member)
+            ->setPassword($hashedPassword);
+        $this->entityManager->persist($newAdmin);
+
+        $this->entityManager->flush();
+
+        return $this;
+    }
+
+    public function removeAdmin(int $memberId){
+        $queryBuilder = $this
+            ->entityManager
+            ->getRepository(self::$entityFqn)
+            ->createQueryBuilder('r')
+            ->delete()
+            ->where('r.member = :memberId')
+            ->setParameter('memberId', $memberId)
+        ;
+
+        $query = $queryBuilder->getQuery();
         $result = $query->execute();
 
         return $result;
+    }
+
+    public function hashPassword(){
+
     }
 
 }

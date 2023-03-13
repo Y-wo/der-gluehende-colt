@@ -22,3 +22,9 @@ label{
     border-radius: 0.75rem;
     border: 5px solid darkslategrey;
 }
+
+.info-text{
+    color: dodgerblue;
+    font-weight: bold;
+    padding-bottom: 1rem;
+}

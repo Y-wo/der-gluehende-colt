@@ -22,6 +22,61 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class IndexController extends AbstractController
 {
+    #[Route(path: '/login', name: 'login')]
+    public function login(
+        Request $request
+    ): Response
+    {
+        $message = $request->query->get('message') ?? null;
+
+        return $this->render("login.html.twig", [
+            'message' => $message
+        ]);
+    }
+
+    #[Route(path: '/login-check', name: 'login_check')]
+    public function loginCheck(
+        MemberEntityService $memberEntityService,
+        AdminEntityService $adminEntityService,
+        JwtService $jwtService,
+        Request $request,
+    ): Response
+    {
+        $sentMemberId = $request->request->get('memberId');
+        $member = $memberEntityService->get($sentMemberId);
+
+        if(!$member) {
+            $message = "Login nicht möglich.";
+            return $this->redirectToRoute('login', [
+               'message' => $message
+            ]);
+        }
+
+        $isAdmin = $adminEntityService->isAdmin($member->getId());
+
+        if(!$isAdmin){
+            $message = "Login nicht möglich.";
+            return $this->redirectToRoute('login', [
+                'message' => $message
+            ]);
+        }
+
+        $sentPassword = $request->request->get('password');
+        $sentHashedPassword = hash('md5', $sentPassword);
+
+        $storedPassword = $adminEntityService->getPasswortByMemberId($member->getId());
+
+        // check if password is correct
+        if($sentHashedPassword == $sentHashedPassword){
+            return new Response($jwtService->createJwt());
+        }else{
+            $message = "Login nicht möglich.";
+            return $this->redirectToRoute('login', [
+                'message' => $message
+            ]);
+        }
+    }
+
 
     #[Route(path: '/', name: 'index')]
     public function index(): Response
@@ -53,11 +108,13 @@ class IndexController extends AbstractController
     public function member(
         MemberEntityService $memberEntityService,
         LocationEntityService $locationEntityService,
+        AdminEntityService $adminEntityService,
         Request $request,
         int $id
     ): Response
     {
         $message = $request->query->get('message') ?? null;
+        $isAdmin = $adminEntityService->isAdmin($id);
 
         /** @var MemberEntity $member */
         $member = $memberEntityService->get($id);
@@ -69,7 +126,8 @@ class IndexController extends AbstractController
             'member' => $member,
             'attendances' => $reversedAttendances,
             'member_departments' => $memberDepartments,
-            'message' => $message
+            'message' => $message,
+            'isAdmin' => $isAdmin
         ]);
     }
 
@@ -77,11 +135,13 @@ class IndexController extends AbstractController
     public function editMember(
         MemberEntityService $memberEntityService,
         LocationEntityService $locationEntityService,
+        AdminEntityService $adminEntityService,
         int $id
     ): Response
     {
         /** @var MemberEntity $member */
         $member = $memberEntityService->get($id);
+        $isAdmin = $adminEntityService->isAdmin($id);
         $memberDepartments = $member->getMemberDepartmentEntities()->toArray();
         $memberDepartmentIds = [];
 
@@ -92,39 +152,54 @@ class IndexController extends AbstractController
 
         return $this->render("edit_member.html.twig", [
             'member' => $member,
-            'member_departments_ids' => $memberDepartmentIds
+            'member_departments_ids' => $memberDepartmentIds,
+            'isAdmin' => $isAdmin,
+        ]);
+    }
+
+
+    #[Route(path: '/create-admin/{id}', name: 'create_admin')]
+    public function createAdmin(
+        MemberEntityService $memberEntityService,
+        LocationEntityService $locationEntityService,
+        AdminEntityService $adminEntityService,
+        int $id
+    ): Response
+    {
+        $member = $memberEntityService->get($id);
+
+        return $this->render("new_admin.html.twig", [
+            'member' => $member,
         ]);
     }
 
 
 
-
-
-    #[Route(path: '/login', name: 'login')]
-    public function login(
-        AuthenticationService $authenticationService,
-        AdminEntityService $adminEntityService,
-        Request $request
-    ): Response
-    {
-        // übergebe die Daten an authenticationChecker
-        // überprüfe, ob Admin mit ID ! existiert und ob das Passwort übereinstimmt
-
-//        $memberId = $request->request->get('memberId');
-//        $password = $request->request->get('password');
+//    #[Route(path: '/login', name: 'login')]
+//    public function login(
+//        AuthenticationService $authenticationService,
+//        AdminEntityService $adminEntityService,
+//        Request $request
+//    ): Response
+//    {
+//        // übergebe die Daten an authenticationChecker
+//        // überprüfe, ob Admin mit ID ! existiert und ob das Passwort übereinstimmt
 //
-//        $isLoginCorrect = $authenticationService
-//            ->checkLoginData(
-//                $memberId,
-//                $password
-//            );
+////        $memberId = $request->request->get('memberId');
+////        $password = $request->request->get('password');
+////
+////        $isLoginCorrect = $authenticationService
+////            ->checkLoginData(
+////                $memberId,
+////                $password
+////            );
+////
+////        return new Response($password);
 //
-//        return new Response($password);
-
-        $response = $adminEntityService->getPasswortByMemberId(5);
-
-        return new Response($response );
-    }
+//        $response = $adminEntityService->getPasswortByMemberId(5);
+//
+//        return new Response($response );
+//    }
 
 
     #[Route(path: '/test', name: 'test')]

@@ -14,6 +14,10 @@
 
         <h2 class="pb-5 text-decoration-underline">Mitglied:</h2>
 
+        {% if isAdmin == true %}
+            <p class="info-text">Administrator</p>
+        {% endif %}
+
         {% if message is defined and message is not null %}
             <p class="info-message">{{ message }}</p>
         {% endif %}
