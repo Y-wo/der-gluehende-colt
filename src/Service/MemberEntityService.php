@@ -124,4 +124,14 @@ class MemberEntityService extends AbstractEntityService
         ];
     }
 
+    public function isDepartmentInDepartmentsOfMember(array $departmentsOfMember, int $departmentId)
+    :bool
+    {
+        foreach ($departmentsOfMember as $department){
+            if ($department['departmentId'] == $departmentId)
+                return true;
+        }
+        return false;
+    }
+
 }

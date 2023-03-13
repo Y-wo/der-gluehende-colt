@@ -13,3 +13,12 @@ input, select {
 label{
     padding-bottom: 1rem;
 }
+
+.info-message{
+    background-color: dodgerblue;
+    font-weight: bolder;
+    text-align: center;
+    padding: 2rem 0;
+    border-radius: 0.75rem;
+    border: 5px solid darkslategrey;
+}

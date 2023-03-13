@@ -152,6 +152,7 @@ class ApiController extends AbstractController
         MemberEntityService $memberEntityService,
         LocationEntityService $locationEntityService,
         Request $request,
+        MemberDepartmentEntityService $memberDepartmentEntityService,
         int $id
     ): Response
     {
@@ -199,36 +200,52 @@ class ApiController extends AbstractController
         }
 
 
+        $membersDepartments = $memberDepartmentEntityService->getDepartmentsOfMember($id);
+
+
 
         if($memberEntityService->store($member)){
+            if(
+                $memberInfos['gun'] == true &&
+                !$memberEntityService->isDepartmentInDepartmentsOfMember($membersDepartments, 1)
+            ){
+                // lege an
+                $memberDepartmentEntityService->createNewMembership($member, 1);
 
-
-            if($memberInfos['gun'] == true){
-                // CHECK IF MEMBERSHIP ALREADY EXISTS
+            }elseif (
+                $memberInfos['gun'] != true &&
+                $memberEntityService->isDepartmentInDepartmentsOfMember($membersDepartments, 1)
+            ){
+                $memberDepartmentEntityService->removeMemberDepartmentByIds($id, 1);
             }
-            if($memberInfos['bow'] == true){
 
+
+            if($memberInfos['bow'] == true &&
+                !$memberEntityService->isDepartmentInDepartmentsOfMember($membersDepartments, 2)
+            ){
+                $memberDepartmentEntityService->createNewMembership($member, 2);
+            }elseif (
+                $memberInfos['bow'] != true &&
+                $memberEntityService->isDepartmentInDepartmentsOfMember($membersDepartments, 2)
+            ){
+                $memberDepartmentEntityService->removeMemberDepartmentByIds($id, 2);
             }
-            if($memberInfos['airPressure'] == true){
 
+            if($memberInfos['airPressure'] == true &&
+                !$memberEntityService->isDepartmentInDepartmentsOfMember($membersDepartments, 3)
+            ){
+                $memberDepartmentEntityService->createNewMembership($member, 3);
+            }elseif (
+                $memberInfos['airPressure'] != true &&
+                $memberEntityService->isDepartmentInDepartmentsOfMember($membersDepartments, 3)
+            ){
+                $memberDepartmentEntityService->removeMemberDepartmentByIds($id, 3);
             }
 
-//            if($gun){
-//                $memberDepartmentEntityService->createNewMembership($newMember, 1);
-//            }
-//
-//            if($bow){
-//                $memberDepartmentEntityService->createNewMembership($newMember, 2);
-//            }
-//
-//            if($airPressure){
-//                $memberDepartmentEntityService->createNewMembership($newMember, 3);
-//            }
-
-            $message = "Created new member with ID " . $member->getId();
+            $message = "Adjusted member with ID " . $member->getId();
             $status = Response::HTTP_OK;
         }else{
-            $message = "Could not create new Member.";
+            $message = "Could not adjust member.";
             $status = Response::HTTP_BAD_REQUEST;
         }
 
@@ -239,6 +256,20 @@ class ApiController extends AbstractController
             ]
 
         );
+    }
+
+    #[Route(path: '/delete-member/{id}', name: 'delete_member')]
+    public function editMember(
+        MemberEntityService $memberEntityService,
+        LocationEntityService $locationEntityService,
+        int $id
+    ): Response
+    {
+        $memberEntityService->setMemberDeleted($id);
+        $message = "Deleted member with ID " . $id;
+        return $this->redirectToRoute("members", [
+            'message' => $message
+        ]);
     }
 
 

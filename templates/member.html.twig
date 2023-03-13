@@ -14,6 +14,10 @@
 
         <h2 class="pb-5 text-decoration-underline">Mitglied:</h2>
 
+        {% if message is defined and message is not null %}
+            <p class="info-message">{{ message }}</p>
+        {% endif %}
+
             <p>Name: {{ member.firstName }} {{ member.lastName }}</p>
             <p>Mitgliedsnummer: {{ member.id }} </p>
             <p>Adresse: {{ member.street }} {{ member.houseNumber }}, {{ member.location.zip}} {{ member.location.locus}} </p>
@@ -27,12 +31,11 @@
                 {% endfor %}
             </p>
 
-        {% dump(member_departments) %}
-
-        <div class="w-100 d-flex justify-content-end">
-            <div class="w-25">
-                <a class="btn bg-success col-4" href="{{ path('members') }}">Zurück</a>
-                <a class="btn bg-info col-4" href="{{ path('edit_member', { id: member.id }) }}">Bearbeiten</a>
+        <div class="w-100 d-flex justify-content-center">
+            <div class="w-50">
+                <a class="btn bg-success col-3" href="{{ path('members') }}">Zurück</a>
+                <a class="btn bg-danger col-3" href="{{ path('api_delete_member', {id: member.id}) }}">Löschen</a>
+                <a class="btn bg-info col-3" href="{{ path('edit_member', { id: member.id }) }}">Bearbeiten</a>
             </div>
         </div>
 

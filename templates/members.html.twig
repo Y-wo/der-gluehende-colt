@@ -16,6 +16,10 @@
 
         <h2 class="text-decoration-underline">Mitglieder</h2>
 
+        {% if message is defined and message is not null %}
+            <p class="info-message">{{ message }}</p>
+        {% endif %}
+
         <div class="d-flex justify-content-end">
             <a href="{{ path('new_member') }}" class="btn bg-info ">Mitglied anlegen</a>
         </div>

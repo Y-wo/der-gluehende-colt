@@ -36,16 +36,15 @@ class MemberDepartmentEntityService extends AbstractEntityService
     public function getDepartmentsOfMember(
         int $memberId
     ){
-
         $queryBuilder = $this
             ->entityManager
             ->getRepository(self::$entityFqn)
             ->createQueryBuilder('r')
             ->innerJoin('r.member', 'm')
             ->innerJoin('r.department', 'd')
-            ->select('d.name')
+            ->select('d.name as departmentName, d.id as departmentId')
             ->where('m.id = :member_id')
-            ->setParameter('member_id', $memberId)#
+            ->setParameter('member_id', $memberId)
         ;
 
         $query = $queryBuilder->getQuery();
@@ -63,4 +62,23 @@ class MemberDepartmentEntityService extends AbstractEntityService
 
         $this->store($newMemberDepartment);
     }
+
+    public function removeMemberDepartmentByIds(int $memberId, int $departmentId){
+        $queryBuilder = $this
+            ->entityManager
+            ->getRepository(self::$entityFqn)
+            ->createQueryBuilder('r')
+            ->delete()
+            ->where('r.member = :memberId')
+            ->andWhere('r.department = :departmentId')
+            ->setParameter('memberId', $memberId)
+            ->setParameter('departmentId', $departmentId)
+        ;
+
+        $query = $queryBuilder->getQuery();
+        $result = $query->execute();
+
+        return $result;
+    }
+
 }

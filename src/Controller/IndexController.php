@@ -30,14 +30,22 @@ class IndexController extends AbstractController
     }
 
     #[Route(path: '/members', name: 'members')]
-    public function members(): Response
+    public function members(
+        Request $request
+    ): Response
     {
-        return $this->render("members.html.twig");
+        $message = $request->query->get('message') ?? null;
+
+        return $this->render("members.html.twig", [
+            'message' => $message
+        ]);
     }
 
     #[Route(path: '/new-member', name: 'new_member')]
-    public function newMember(): Response
+    public function newMember(
+    ): Response
     {
+
         return $this->render("new_member.html.twig");
     }
 
@@ -45,9 +53,12 @@ class IndexController extends AbstractController
     public function member(
         MemberEntityService $memberEntityService,
         LocationEntityService $locationEntityService,
+        Request $request,
         int $id
     ): Response
     {
+        $message = $request->query->get('message') ?? null;
+
         /** @var MemberEntity $member */
         $member = $memberEntityService->get($id);
         $attendances = $member->getAttendanceEntities()->toArray();
@@ -57,7 +68,8 @@ class IndexController extends AbstractController
         return $this->render("member.html.twig", [
             'member' => $member,
             'attendances' => $reversedAttendances,
-            'member_departments' => $memberDepartments
+            'member_departments' => $memberDepartments,
+            'message' => $message
         ]);
     }
 
