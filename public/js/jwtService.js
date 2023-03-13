@@ -18,6 +18,7 @@ export async function getJwtReponse(memberId, password){
         })
 }
 
+// checks if stored jwt is okay
 export function checkJwtStatus(){
     let jwt = localStorage.getItem('jwt')
     console.log(jwt)
@@ -38,6 +39,7 @@ export function checkJwtStatus(){
         })
 }
 
+//removes jwt (neccessary for logout)
 export async function removeJwtFromLocalStorage(){
     localStorage.removeItem('jwt');
 }

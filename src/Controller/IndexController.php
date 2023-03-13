@@ -39,7 +39,6 @@ class IndexController extends AbstractController
         Request $request
     ): Response
     {
-
         return $this->render("logout.html.twig");
     }
 
@@ -182,56 +181,6 @@ class IndexController extends AbstractController
             'member' => $member,
         ]);
     }
-
-
-
-//    #[Route(path: '/login', name: 'login')]
-//    public function login(
-//        AuthenticationService $authenticationService,
-//        AdminEntityService $adminEntityService,
-//        Request $request
-//    ): Response
-//    {
-//        // übergebe die Daten an authenticationChecker
-//        // überprüfe, ob Admin mit ID ! existiert und ob das Passwort übereinstimmt
-//
-////        $memberId = $request->request->get('memberId');
-////        $password = $request->request->get('password');
-////
-////        $isLoginCorrect = $authenticationService
-////            ->checkLoginData(
-////                $memberId,
-////                $password
-////            );
-////
-////        return new Response($password);
-//
-//        $response = $adminEntityService->getPasswortByMemberId(5);
-//
-//        return new Response($response );
-//    }
-
-
-    #[Route(path: '/test', name: 'test')]
-    public function test(
-        JwtService $jwtService
-    ): Response
-    {
-
-        $jwt = $jwtService->createJwt();
-
-        return new Response($jwt);
-    }
-
-
-
-    #[Route(path: '/birthday', name: 'birthday')]
-    public function birthday(): Response
-    {
-        return $this->render("birthday.html.twig");
-    }
-
-
 
 
 }

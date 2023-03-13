@@ -1,18 +1,19 @@
 'use strict'
-import {apiPath} from "./configuration.js";
-import {getJwtReponse} from "./jwtService.js";
-
-
+import {apiPath, localPath} from "./configuration.js";
+import {checkJwtStatus, getJwtReponse} from "./jwtService.js";
 
 document.addEventListener("DOMContentLoaded", async function(){
+    console.log("login.js aufgerufen")
+
     const submitButton = $('.submitButton')
 
     const passwordInput = $('.password')
     const memberIdInput = $('.memberId')
 
-
+    const indexPath = localPath
 
     submitButton.click(async function() {
+        console.log("Button geklickt")
         let password = passwordInput.val()
         let memberId = memberIdInput.val()
 
@@ -23,12 +24,14 @@ document.addEventListener("DOMContentLoaded", async function(){
         // store jwt in localStorage if status is ok
         if(getJwtResponse.status === 200){
             let jwt = await getJwtResponse.text()
-            console.log(jwt)
             localStorage.setItem('jwt', jwt)
+        }
 
-        //     how to get storage by key:
-        //     console.log(localStorage.getItem('jwt'))
 
+        let jwtResponse = await checkJwtStatus()
+        let isUserAuthentified = await jwtResponse.text()
+        if(isUserAuthentified === "true"){
+            window.location.href = indexPath;
         }
     })
 })

@@ -3,8 +3,10 @@ import {
     localPath,
     apiPath,
     countDepartments,
-    attendencesPerYearForGunAuhorization
+    attendencesPerYearForGunAuhorization,
+    loginPath
 } from "./configuration.js";
+import {checkAccess} from "./base.js";
 
 // gets all members from server
 async function getMembers(){
@@ -106,6 +108,10 @@ function setAttendance(memberId, departmentId){
 
 
 document.addEventListener("DOMContentLoaded", async function(){
+    if(!await checkAccess()){
+        window.location.href = loginPath;
+    }
+
     const tableBodyMembers = $('.table-body-members');
     let members = await getMembers();
 
