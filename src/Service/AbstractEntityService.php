@@ -30,7 +30,6 @@ abstract class AbstractEntityService
     }
 
     public function getAll()
-//    : ?Array
     {
         return $this
             ->entityManager

@@ -75,7 +75,6 @@ class AttendanceEntityService extends AbstractEntityService
 
     public function isMemberInDepartmentInAttendanceToday(array $attendances): bool
     {
-//        $result = $this->getMembersDepartmentAttendancesToday($memberId, $departmentId);
 
         return count($attendances) > 0;
     }

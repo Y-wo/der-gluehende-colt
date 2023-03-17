@@ -1,7 +1,7 @@
 # todo
 
-- Zugriff auf Git Repository geben
 - admin ändern (Passwort Ändern FUnktion) und auch hier Sicherheit einbauen
+- Die Admin Sachen in den IndexController rein
 - optisch anpassen (?)
   - login-Maske
   - checkboxen

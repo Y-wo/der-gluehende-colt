@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\AbstractEntity;
 use App\Entity\AdminEntity;
 use App\Entity\MemberEntity;
 use Doctrine\ORM\EntityManagerInterface;
@@ -89,7 +90,8 @@ class AdminEntityService extends AbstractEntityService
         return count($result) > 0;
     }
 
-    public function createAdmin(int $memberId, string $password):self{
+    public function createAdmin(int $memberId, string $password):self
+    {
         $member = $this->memberEntityService->get($memberId);
         $newAdmin = new AdminEntity();
 
@@ -105,6 +107,40 @@ class AdminEntityService extends AbstractEntityService
 
         return $this;
     }
+
+    public function changePassword(int $memberId, string $password):self
+    {
+        /** @var AdminEntity $admin */
+        $admin = $this->getAdminByMemberId($memberId);
+        $hashedPassword = hash('md5', $password);
+
+        $admin->setPassword($hashedPassword);
+        $this->entityManager->persist($admin);
+        $this->entityManager->flush();
+
+        return $this;
+    }
+
+    public function getAdminByMemberId(int $memberId) : ?AbstractEntity{
+        $queryBuilder = $this
+            ->entityManager
+            ->getRepository(self::$entityFqn)
+            ->createQueryBuilder('r')
+            ->where('r.member = :member_id')
+            ->setParameter('member_id', $memberId)
+            ;
+
+        $query = $queryBuilder->getQuery();
+        $result = $query->execute();
+
+        if(count($result) > 0){
+            return $result[0];
+        }else{
+            return null;
+        }
+
+    }
+
 
     public function removeAdmin(int $memberId){
         $queryBuilder = $this

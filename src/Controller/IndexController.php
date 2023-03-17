@@ -170,14 +170,25 @@ class IndexController extends AbstractController
     #[Route(path: '/create-admin/{id}', name: 'create_admin')]
     public function createAdmin(
         MemberEntityService $memberEntityService,
-        LocationEntityService $locationEntityService,
-        AdminEntityService $adminEntityService,
         int $id
     ): Response
     {
         $member = $memberEntityService->get($id);
 
         return $this->render("new_admin.html.twig", [
+            'member' => $member,
+        ]);
+    }
+
+    #[Route(path: '/edit-admin/{id}', name: 'edit_admin')]
+    public function editAdmin(
+        MemberEntityService $memberEntityService,
+        int $id
+    ): Response
+    {
+        $member = $memberEntityService->get($id);
+
+        return $this->render("edit_admin.html.twig", [
             'member' => $member,
         ]);
     }

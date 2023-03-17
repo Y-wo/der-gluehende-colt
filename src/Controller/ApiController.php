@@ -327,7 +327,7 @@ class ApiController extends AbstractController
     }
 
     #[Route(path: '/delete-member/{id}', name: 'delete_member')]
-    public function editMember(
+    public function deleteMember(
         MemberEntityService $memberEntityService,
         LocationEntityService $locationEntityService,
         int $id
@@ -469,15 +469,46 @@ class ApiController extends AbstractController
             ]);
     }
 
-    #[Route(path: '/remove-admin/{id}', name: 'remove_admin')]
-    public function removeAdmin(
+//    #[Route(path: '/remove-admin/{id}', name: 'remove_admin')]
+//    public function removeAdmin(
+//        AdminEntityService $adminEntityService,
+//        ResponseService $responseService,
+//        int $id
+//    ): Response
+//    {
+//        $adminEntityService->removeAdmin($id);
+//        return new Response("");
+//    }
+
+    #[Route(path: '/edit-admin/{id}', name: 'edit_admin')]
+    public function editAdmin(
         AdminEntityService $adminEntityService,
+        MemberEntityService $memberEntityService,
         ResponseService $responseService,
+        Request $request,
         int $id
     ): Response
     {
-        $adminEntityService->removeAdmin($id);
-        return new Response("yo gelöscht");
+//        $sentMemberId = $request->request->get('memberId');
+        $sentPassword = $request->request->get('password');
+        $sentPasswordConfirmation = $request->request->get('passwordConfirmation');
+
+        if ($sentPassword == $sentPasswordConfirmation){
+            $adminEntityService->changePassword($id, $sentPassword );
+
+            $message = "Password changed of member with ID" . $id;
+            return $this->redirectToRoute('member', [
+                'id' => $id,
+                'message' => $message,
+            ]);
+        }
+        $message = "Could not change password of member with ID " . $id;
+        return $this->redirectToRoute('member', [
+            'id' => $id,
+            'message' => $message,
+        ]);
     }
+
+
 
 }

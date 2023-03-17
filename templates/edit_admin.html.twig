@@ -1,0 +1,34 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+    Mitglieder
+{% endblock title %}
+
+{% block main_content %}
+
+    <div class="container-md member-div">
+
+        <h2 class="text-decoration-underline">Administrator bearbeiten: {{ member.firstName }} {{ member.lastName }} (ID: {{ member.id }})</h2>
+
+        <div class="d-flex justify-content-center">
+            <form class="d-flex flex-column w-25" action="{{ path('api_edit_admin', {id: member.id}) }}" method="post">
+
+                <h3>Passwort ändern</h3>
+
+                <input name="password" type="password" required>
+                <label for="password">Neues Passwort</label>
+
+                <input name="passwordConfirmation" type="password" required>
+                <label for="passwordConfirmation">Passwort Wiederholung</label>
+
+                <div class="pt-5 d-flex justify-content-between row" >
+                    <a class="col-4 btn bg-danger " href="{{ path('member', { id: member.id }) }}">Abbrechen</a>
+                    <input class="col-4 btn bg-success" type="submit" value="Anlegen" name="create">
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+
+{% endblock %}

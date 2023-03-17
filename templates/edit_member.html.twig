@@ -71,7 +71,7 @@
                     <a class="btn bg-success col-4" href="{{ path('member', { id: member.id}) }}">Zurück</a>
 
                     {% if isAdmin == true %}
-                        <a class="btn bg-warning col-4">Passwort ändern</a>
+                        <a class="btn bg-warning col-4" href="{{ path('edit_admin', {id: member.id}) }}">Passwort ändern</a>
                     {% else %}
                         <a href="{{ path('create_admin', {id: member.id}) }}" class="btn bg-warning col-4">Zu Admin machen</a>
                     {% endif %}

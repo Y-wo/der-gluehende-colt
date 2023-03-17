@@ -6,12 +6,12 @@ use App\Repository\AdminEntityRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AdminEntityRepository::class)]
-class AdminEntity
+class AdminEntity extends AbstractEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    protected int $id;
 
     #[ORM\Column(length: 255)]
     private ?string $password = null;
