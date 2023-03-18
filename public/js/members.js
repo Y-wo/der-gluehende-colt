@@ -61,7 +61,10 @@ function countMembersGunAttendanceLastYear(attendances){
         if(entry.department.name === "Schusswaffen"){
             const entryDate = new Date(entry.date);
             const entryDateMs = entryDate.getTime();
-            if(entryDateMs <= todayMs && entryDateMs >= oneYearAgoMs) counter++
+            if(entryDateMs <= todayMs && entryDateMs >= oneYearAgoMs) {
+                console.log("counter +1")
+                counter++
+            }
         }
     }
     return counter;
