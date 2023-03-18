@@ -62,6 +62,8 @@ function countMembersGunAttendanceLastYear(attendances){
             const entryDate = new Date(entry.date);
             const entryDateMs = entryDate.getTime();
             if(entryDateMs <= todayMs && entryDateMs >= oneYearAgoMs) counter++
+
+            console.log("ja man!")
         }
     }
     return counter;
@@ -151,9 +153,6 @@ document.addEventListener("DOMContentLoaded", async function(){
                 let targetsDepartment = event.target.dataset['department'];
                 let targetsMember = event.target.dataset['member'];
                 let response = await setAttendance(targetsMember, targetsDepartment);
-                console.log("Status: " + response.status);
-                console.log(await response.text());
-
 
                 // update gunAuthorization information
                 // - get member new from server
@@ -162,7 +161,6 @@ document.addEventListener("DOMContentLoaded", async function(){
                 let updatedCountedAttendances = countMembersGunAttendanceLastYear(updatedMember[0].attendanceEntities)
                 let updatedIsWeaponAuthorized = checkWeaponAuthorization(updatedCountedAttendances);
 
-                console.log("update authorisiert? - " + updatedIsWeaponAuthorized )
                 let updatedWeaponAuthorizationWord = updatedIsWeaponAuthorized ?  'ja' : 'nein';
                 let updatedWeaponAuthorizationColor = updatedIsWeaponAuthorized ? 'bg-success' : 'bg-danger'
 
