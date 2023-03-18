@@ -6,5 +6,4 @@ export const localApiPath = `${localPath}api/`;
 export const apiPath = localApiPath
 export const countDepartments = 3;
 export const attendencesPerYearForGunAuhorization = 1;
-export const testVariable = "test hallo 123;"
 export const loginPath = `${localPath}login`

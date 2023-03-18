@@ -2,7 +2,6 @@
 import {
     apiPath, loginPath
 } from "./configuration.js"
-import {checkAccess} from "./base.js";
 
 function getMembersWhoseBirtdayIsComing(){
     return fetch(apiPath + "birthdays",
@@ -22,10 +21,6 @@ function getMembersWhoseBirtdayIsComing(){
 
 
 document.addEventListener("DOMContentLoaded", async function(){
-    // if(!await checkAccess()){
-    //     window.location.href = loginPath;
-    // }
-
     const birthdaysTable = $('.birthdays-table')
     const birtdayDiv = $('.birthday-div')
 

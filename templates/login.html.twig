@@ -8,24 +8,9 @@
 
     {% include 'navbar.html.twig' %}
 
-    <script type="module" src="js/login.js"></script>
-
-
     {% if message is defined and message is not null %}
         <p class="info-message">{{ message }}</p>
     {% endif %}
-
-{#    OLD   #}
-
-{#    <form action="" method="post">#}
-{#        <input type="number" class="memberId" name="memberId">#}
-{#        <label for="memberId">Mitgliedsnummer</label>#}
-
-{#        <input type="password" name="password" class="password">#}
-{#        <label for="password">Passwort</label>#}
-
-{#    </form>#}
-{#    <button class="submitButton">login</button>#}
 
 
     <form action="{{ path('check_login') }}" method="post">
