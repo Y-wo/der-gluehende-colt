@@ -4,7 +4,6 @@ import {
     apiPath,
     countDepartments,
     attendencesPerYearForGunAuhorization,
-    loginPath
 } from "./configuration.js";
 
 // gets all members from server

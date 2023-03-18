@@ -20,7 +20,7 @@
 
         <div class="d-flex justify-content-center">
 
-            <form class="d-flex flex-column w-25" action="{{ path('api_save_member', { id: member.id}) }}" method="post">
+            <form class="d-flex flex-column w-25" action="{{ path('save_member', { id: member.id}) }}" method="post">
                 <input name="firstName" type="text" value="{{ member.firstName }}" required>
                 <label for="firstName">Vorname</label>
 

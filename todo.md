@@ -1,12 +1,5 @@
 # todo
 
-- js für login entfernen
-- testen
-- base anpassen
-  - hässlichen scheiß entfernen + webpack kram entfernen
-  - Buttons (Anmelden/abmelden) relativieren
-  - Willkommen User - Ausgabe
-
 - optisch anpassen (?)
   - login-Maske
   - checkboxen

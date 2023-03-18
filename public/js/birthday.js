@@ -1,6 +1,6 @@
 'use strict';
 import {
-    apiPath, loginPath
+    apiPath
 } from "./configuration.js"
 
 function getMembersWhoseBirtdayIsComing(){
@@ -35,8 +35,6 @@ document.addEventListener("DOMContentLoaded", async function(){
             // add 0 to a month if it is smaller than 10 because it looks better
             let manipulatedMonth = (month < 10) ? `0${month}` : month
             let year = birthday.getFullYear()
-            console.log(birthday)
-
 
             const tableRowMember = $(`<tr class='tr-${member.id}'></tr>`)
             const tableDataid = $(`<td> ${member.id} </td>`)
@@ -52,7 +50,6 @@ document.addEventListener("DOMContentLoaded", async function(){
             );
 
             birthdaysTable.append(tableRowMember);
-
 
             // checks if members birthday is today and visualizes it
             let today = new Date();
