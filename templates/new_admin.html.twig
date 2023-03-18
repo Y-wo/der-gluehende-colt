@@ -17,7 +17,7 @@
         <h2 class="text-decoration-underline">Neuer Administrator {{ member.firstName }} {{ member.lastName }} (ID: {{ member.id }})</h2>
 
         <div class="d-flex justify-content-center">
-            <form class="d-flex flex-column w-25" action="{{ path('api_create_admin', {id: member.id}) }}" method="post">
+            <form class="d-flex flex-column w-25" action="{{ path('execute_creation_admin', {id: member.id}) }}" method="post">
 
                 <h3>Passwort</h3>
 

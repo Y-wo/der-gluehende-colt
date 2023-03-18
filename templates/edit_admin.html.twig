@@ -11,7 +11,7 @@
         <h2 class="text-decoration-underline">Administrator bearbeiten: {{ member.firstName }} {{ member.lastName }} (ID: {{ member.id }})</h2>
 
         <div class="d-flex justify-content-center">
-            <form class="d-flex flex-column w-25" action="{{ path('api_edit_admin', {id: member.id}) }}" method="post">
+            <form class="d-flex flex-column w-25" action="{{ path('execute_editing_admin', {id: member.id}) }}" method="post">
 
                 <h3>Passwort ändern</h3>
 

@@ -1,7 +1,6 @@
 # todo
 
-- admin ändern (Passwort Ändern FUnktion) und auch hier Sicherheit einbauen
-- Die Admin Sachen in den IndexController rein
+- login php seitig
 - optisch anpassen (?)
   - login-Maske
   - checkboxen
@@ -12,6 +11,10 @@
 - Code bereinigen
 - attendencesPerYearForGunAuhorization auf 12 erhöhen
     
+
+## evtl
+- jwt für js Abfragen
+- email?
 
 ## Zum Schluss
 - hier ist noch ein manueller loginPath gesetzt: C:\xampp\htdocs\der-gluehende-colt\der-gluehende-colt\templates\navbar.html.twig

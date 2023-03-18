@@ -27,21 +27,8 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route(path: '/api', name: 'api_')]
 class ApiController extends AbstractController
 {
-    #[Route(path: '/test', name: 'test')]
-    public function test(
-        SerializerService $serializerService,
-        MemberDepartmentEntityService $memberDepartmentService,
-    ): Response
-    {
-        $testEntity = $memberDepartmentService->getAll();
-        $serializedObject = $serializerService->serializeObject($testEntity);
-        return new JsonResponse($serializedObject, 200, [], true);
-    }
-
     #[Route(path: '/get-jwt', name: 'get_jwt')]
     public function getJwt(
-        SerializerService $serializerService,
-        MemberDepartmentEntityService $memberDepartmentService,
         MemberEntityService $memberEntityService,
         AdminEntityService $adminEntityService,
         JwtService $jwtService,
@@ -80,10 +67,6 @@ class ApiController extends AbstractController
 
     #[Route(path: '/check-jwt', name: 'check_jwt')]
     public function checkJwt(
-        SerializerService $serializerService,
-        MemberDepartmentEntityService $memberDepartmentService,
-        MemberEntityService $memberEntityService,
-        AdminEntityService $adminEntityService,
         JwtService $jwtService,
         Request $request
     ): Response
@@ -126,10 +109,8 @@ class ApiController extends AbstractController
     #[Route(path: '/create-member', name: 'create_member')]
     public function createNewMember(
         MemberEntityService $memberEntityService,
-        ResponseService $responseService,
         LocationEntityService $locationEntityService,
         MemberDepartmentEntityService $memberDepartmentEntityService,
-        DepartmentEntityService $departmentEntityService,
         Request $request,
     ): Response
     {
@@ -220,9 +201,6 @@ class ApiController extends AbstractController
         /** @var MemberEntity $member */
         $member = $memberEntityService->get($id);
 
-
-
-
         if($member->getFirstname() != $memberInfos['firstName']){
             $member->setFirstName($memberInfos['firstName']);
         };
@@ -246,7 +224,6 @@ class ApiController extends AbstractController
             $member->setHouseNumber($memberInfos['houseNumber']);
         };
 
-
         $membersZip = $member->getLocation()->getZip();
 
         if($membersZip != $memberInfos['zip'] ){
@@ -267,26 +244,20 @@ class ApiController extends AbstractController
             $member->setLocation($location);
         }
 
-
         $membersDepartments = $memberDepartmentEntityService->getDepartmentsOfMember($id);
-
-
 
         if($memberEntityService->store($member)){
             if(
                 $memberInfos['gun'] == true &&
                 !$memberEntityService->isDepartmentInDepartmentsOfMember($membersDepartments, 1)
             ){
-                // lege an
                 $memberDepartmentEntityService->createNewMembership($member, 1);
-
             }elseif (
                 $memberInfos['gun'] != true &&
                 $memberEntityService->isDepartmentInDepartmentsOfMember($membersDepartments, 1)
             ){
                 $memberDepartmentEntityService->removeMemberDepartmentByIds($id, 1);
             }
-
 
             if($memberInfos['bow'] == true &&
                 !$memberEntityService->isDepartmentInDepartmentsOfMember($membersDepartments, 2)
@@ -326,10 +297,10 @@ class ApiController extends AbstractController
         );
     }
 
+
     #[Route(path: '/delete-member/{id}', name: 'delete_member')]
     public function deleteMember(
         MemberEntityService $memberEntityService,
-        LocationEntityService $locationEntityService,
         int $id
     ): Response
     {
@@ -339,7 +310,6 @@ class ApiController extends AbstractController
             'message' => $message
         ]);
     }
-
 
 
     #[Route(path: '/birthdays', name: 'get_birthdays')]
@@ -369,7 +339,6 @@ class ApiController extends AbstractController
     #[Route(path: '/handle-attendance/{memberId}/{departmentId}', name: 'attendance')]
     public function handleAttendance(
         AttendanceEntityService $attendanceEntityService,
-        ResponseService $responseService,
         int $memberId,
         int $departmentId
     ): Response
@@ -440,75 +409,5 @@ class ApiController extends AbstractController
         $memberDepartment = $memberDepartmentEntityService->getAll();
         return $responseService->convertObjectToJsonResponse($memberDepartment);
     }
-
-    #[Route(path: '/create-admin/{id}', name: 'create_admin')]
-    public function createAdmin(
-        MemberEntityService $memberEntityService,
-        LocationEntityService $locationEntityService,
-        AdminEntityService $adminEntityService,
-        Request $request,
-        int $id
-    ): Response
-    {
-        $password = $request->request->get('password');
-        $passwordConfirmation = $request->request->get('passwordConfirmation');
-
-        if ($password == $passwordConfirmation){
-            $adminEntityService->createAdmin($id, $password);
-
-            $message = "New Admin created with ID " . $id;
-            return $this->redirectToRoute('member', [
-                'id' => $id,
-                'message' => $message,
-            ]);
-        }
-            $message = "Could not create new admin " . $id;
-            return $this->redirectToRoute('member', [
-                'id' => $id,
-                'message' => $message,
-            ]);
-    }
-
-//    #[Route(path: '/remove-admin/{id}', name: 'remove_admin')]
-//    public function removeAdmin(
-//        AdminEntityService $adminEntityService,
-//        ResponseService $responseService,
-//        int $id
-//    ): Response
-//    {
-//        $adminEntityService->removeAdmin($id);
-//        return new Response("");
-//    }
-
-    #[Route(path: '/edit-admin/{id}', name: 'edit_admin')]
-    public function editAdmin(
-        AdminEntityService $adminEntityService,
-        MemberEntityService $memberEntityService,
-        ResponseService $responseService,
-        Request $request,
-        int $id
-    ): Response
-    {
-//        $sentMemberId = $request->request->get('memberId');
-        $sentPassword = $request->request->get('password');
-        $sentPasswordConfirmation = $request->request->get('passwordConfirmation');
-
-        if ($sentPassword == $sentPasswordConfirmation){
-            $adminEntityService->changePassword($id, $sentPassword );
-
-            $message = "Password changed of member with ID" . $id;
-            return $this->redirectToRoute('member', [
-                'id' => $id,
-                'message' => $message,
-            ]);
-        }
-        $message = "Could not change password of member with ID " . $id;
-        return $this->redirectToRoute('member', [
-            'id' => $id,
-            'message' => $message,
-        ]);
-    }
-
-
 
 }

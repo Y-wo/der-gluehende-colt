@@ -36,60 +36,23 @@ class IndexController extends AbstractController
 
     #[Route(path: '/logout', name: 'logout')]
     public function logout(
-        Request $request
     ): Response
     {
         return $this->render("logout.html.twig");
     }
 
 
-    #[Route(path: '/login-check', name: 'login_check')]
-    public function loginCheck(
-        MemberEntityService $memberEntityService,
-        AdminEntityService $adminEntityService,
-        JwtService $jwtService,
-        Request $request,
-    ): Response
-    {
-        $sentMemberId = $request->request->get('memberId');
-        $member = $memberEntityService->get($sentMemberId);
-
-        if(!$member) {
-            $message = "Login nicht möglich.";
-            return $this->redirectToRoute('login', [
-               'message' => $message
-            ]);
-        }
-
-        $isAdmin = $adminEntityService->isAdmin($member->getId());
-
-        if(!$isAdmin){
-            $message = "Login nicht möglich.";
-            return $this->redirectToRoute('login', [
-                'message' => $message
-            ]);
-        }
-
-        $sentPassword = $request->request->get('password');
-        $sentHashedPassword = hash('md5', $sentPassword);
-
-        $storedPassword = $adminEntityService->getPasswortByMemberId($member->getId());
-
-        // check if password is correct
-        if($sentHashedPassword == $sentHashedPassword){
-            return new Response($jwtService->createJwt());
-        }else{
-            $message = "Login nicht möglich.";
-            return $this->redirectToRoute('login', [
-                'message' => $message
-            ]);
-        }
-    }
-
 
     #[Route(path: '/', name: 'index')]
-    public function index(): Response
+    public function index(
+        Request $request
+    ): Response
     {
+//        $session = $request->getSession();
+//        $session->set('test', 'hallo 123');
+//        $session->clear();
+//        $testSession = $session->get('test');
+
         return $this->render("index.html.twig");
     }
 
@@ -116,7 +79,6 @@ class IndexController extends AbstractController
     #[Route(path: '/member/{id}', name: 'member')]
     public function member(
         MemberEntityService $memberEntityService,
-        LocationEntityService $locationEntityService,
         AdminEntityService $adminEntityService,
         Request $request,
         int $id
@@ -180,6 +142,33 @@ class IndexController extends AbstractController
         ]);
     }
 
+    #[Route(path: '/execute-creation-admin/{id}', name: 'execute_creation_admin')]
+    public function executeCreationAdmin(
+        AdminEntityService $adminEntityService,
+        Request $request,
+        int $id
+    ): Response
+    {
+        $password = $request->request->get('password');
+        $passwordConfirmation = $request->request->get('passwordConfirmation');
+
+        if ($password == $passwordConfirmation){
+            $adminEntityService->createAdmin($id, $password);
+
+            $message = "New Admin created with ID " . $id;
+            return $this->redirectToRoute('member', [
+                'id' => $id,
+                'message' => $message,
+            ]);
+        }
+        $message = "Could not create new admin " . $id;
+        return $this->redirectToRoute('member', [
+            'id' => $id,
+            'message' => $message,
+        ]);
+    }
+
+
     #[Route(path: '/edit-admin/{id}', name: 'edit_admin')]
     public function editAdmin(
         MemberEntityService $memberEntityService,
@@ -193,5 +182,30 @@ class IndexController extends AbstractController
         ]);
     }
 
+    #[Route(path: '/execute-editing-admin/{id}', name: 'execute_editing_admin')]
+    public function executeEditingAdmin(
+        AdminEntityService $adminEntityService,
+        Request $request,
+        int $id
+    ): Response
+    {
+        $sentPassword = $request->request->get('password');
+        $sentPasswordConfirmation = $request->request->get('passwordConfirmation');
+
+        if ($sentPassword == $sentPasswordConfirmation){
+            $adminEntityService->changePassword($id, $sentPassword );
+
+            $message = "Password changed of member with ID" . $id;
+            return $this->redirectToRoute('member', [
+                'id' => $id,
+                'message' => $message,
+            ]);
+        }
+        $message = "Could not change password of member with ID " . $id;
+        return $this->redirectToRoute('member', [
+            'id' => $id,
+            'message' => $message,
+        ]);
+    }
 
 }
