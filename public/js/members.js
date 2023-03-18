@@ -56,11 +56,26 @@ function countMembersGunAttendanceLastYear(attendances){
     const oneYearAgoMs = new Date(new Date().setFullYear(new Date().getFullYear() - 1)).getTime();
     const todayMs = new Date().getTime();
 
+    console.log("neues Zählen")
     for (let entry of attendances){
         // only count if attendance relates to department "gun"
+
+        console.log("geht in for-Schleife")
+
         if(entry.department.name === "Schusswaffen"){
+
+            console.log("departmentName ist Schusswaffe")
+
             const entryDate = new Date(entry.date);
             const entryDateMs = entryDate.getTime();
+
+            console.log("entryDateMs:")
+            console.log(entryDateMs)
+            console.log("oneYearAgoMs")
+            console.log(oneYearAgoMs)
+            console.log("todayMs")
+            console.log(todayMs)
+
             if(entryDateMs <= todayMs && entryDateMs >= oneYearAgoMs) {
                 console.log("counter +1")
                 counter++
