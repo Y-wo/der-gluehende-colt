@@ -54,30 +54,15 @@ function getDepartmentNames(memberDepartmentEntities){
 function countMembersGunAttendanceLastYear(attendances){
     let counter = 0
     const oneYearAgoMs = new Date(new Date().setFullYear(new Date().getFullYear() - 1)).getTime();
-    const todayMs = new Date().getTime();
+    const todayEnd = new Date();
+    todayEnd.setUTCHours(23,59,59,999);
+    const todayEndMs = todayEnd.getTime()
 
-    console.log("neues Zählen")
     for (let entry of attendances){
-        // only count if attendance relates to department "gun"
-
-        console.log("geht in for-Schleife")
-
         if(entry.department.name === "Schusswaffen"){
-
-            console.log("departmentName ist Schusswaffe")
-
             const entryDate = new Date(entry.date);
             const entryDateMs = entryDate.getTime();
-
-            console.log("entryDateMs:")
-            console.log(entryDateMs)
-            console.log("oneYearAgoMs")
-            console.log(oneYearAgoMs)
-            console.log("todayMs")
-            console.log(todayMs)
-
-            if(entryDateMs <= todayMs && entryDateMs >= oneYearAgoMs) {
-                console.log("counter +1")
+            if(entryDateMs <= todayEndMs && entryDateMs >= oneYearAgoMs) {
                 counter++
             }
         }
@@ -176,8 +161,6 @@ document.addEventListener("DOMContentLoaded", async function(){
                 let updatedMember = await getMember(member.id)
                 let updatedCountedAttendances = countMembersGunAttendanceLastYear(updatedMember[0].attendanceEntities)
 
-                console.log(updatedCountedAttendances)
-
                 let updatedIsWeaponAuthorized = checkWeaponAuthorization(updatedCountedAttendances);
 
                 let updatedWeaponAuthorizationWord = updatedIsWeaponAuthorized ?  'ja' : 'nein';
@@ -185,21 +168,12 @@ document.addEventListener("DOMContentLoaded", async function(){
 
                 tableDataWeaponAuthorized.html(updatedWeaponAuthorizationWord)
 
-
-                // console.log(updatedWeaponAuthorizationColor)
-                // tableDataWeaponAuthorized.hasClass('bg-success')
-                // console.log(tableDataWeaponAuthorized.hasClass('bg-danger'))
-
                 if(updatedWeaponAuthorizationColor === "bg-danger" && tableDataWeaponAuthorized.hasClass('bg-success')){
                     tableDataWeaponAuthorized.removeClass("bg-success")
                     tableDataWeaponAuthorized.addClass('bg-danger')
-                    console.log("success -> danger")
-
                 }else if(updatedWeaponAuthorizationColor === "bg-success" && tableDataWeaponAuthorized.hasClass('bg-danger')){
                     tableDataWeaponAuthorized.removeClass("bg-danger")
                     tableDataWeaponAuthorized.addClass('bg-success')
-                    console.log("danger -> success")
-
                 }
             })
         }
