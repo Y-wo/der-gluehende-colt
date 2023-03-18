@@ -13,4 +13,5 @@
 
 ## Zum Schluss
 - Env auf prod ändern
+- Schumacher schicken (wie?) !
 
