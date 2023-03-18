@@ -62,8 +62,6 @@ function countMembersGunAttendanceLastYear(attendances){
             const entryDate = new Date(entry.date);
             const entryDateMs = entryDate.getTime();
             if(entryDateMs <= todayMs && entryDateMs >= oneYearAgoMs) counter++
-
-            console.log("ja man!")
         }
     }
     return counter;
@@ -159,6 +157,9 @@ document.addEventListener("DOMContentLoaded", async function(){
                 // - check again if member is authorized (and change visualization)
                 let updatedMember = await getMember(member.id)
                 let updatedCountedAttendances = countMembersGunAttendanceLastYear(updatedMember[0].attendanceEntities)
+
+                console.log(updatedCountedAttendances)
+
                 let updatedIsWeaponAuthorized = checkWeaponAuthorization(updatedCountedAttendances);
 
                 let updatedWeaponAuthorizationWord = updatedIsWeaponAuthorized ?  'ja' : 'nein';
