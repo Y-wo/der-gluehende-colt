@@ -2,26 +2,29 @@
 
 namespace App\Controller;
 
+use App\Entity\LocationEntity;
 use App\Entity\MemberEntity;
 use App\Service\AdminEntityService;
-use App\Service\AttendanceEntityService;
-use App\Service\AuthenticationService;
-use App\Service\DepartmentEntityService;
-use App\Service\JwtService;
 use App\Service\LocationEntityService;
+use App\Service\LoginService;
 use App\Service\MemberDepartmentEntityService;
 use App\Service\MemberEntityService;
-use App\Service\ResponseService;
-use App\Service\SerializerService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
-
 
 class IndexController extends AbstractController
 {
+    private LoginService $loginService;
+
+    public function __construct(
+        LoginService $loginService
+    )
+    {
+        $this->loginService = $loginService;
+    }
+
     #[Route(path: '/login', name: 'login')]
     public function login(
         Request $request
@@ -34,11 +37,36 @@ class IndexController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/logout', name: 'logout')]
-    public function logout(
+    #[Route(path: '/check-login', name: 'check_login')]
+    public function checkLogin(
+        Request $request,
+        LoginService $loginService
     ): Response
     {
-        return $this->render("logout.html.twig");
+        //check if userData are correct
+        $isAuthorized = $loginService->authenticate($request);
+
+        if(!$isAuthorized){
+            $message = "Login nicht möglich.";
+            return $this->redirectToRoute('login', [
+                'message' => $message,
+            ]);
+        }else{
+            $message = "Herzlich Willkommen";
+            return $this->redirectToRoute('index', [
+                'message' => $message,
+            ]);
+        }
+    }
+
+
+    #[Route(path: '/logout', name: 'logout')]
+    public function logout(
+        Request $request
+    ): Response
+    {
+        $this->loginService->clearSession($request);
+        return $this->redirectToRoute('login');
     }
 
 
@@ -48,10 +76,9 @@ class IndexController extends AbstractController
         Request $request
     ): Response
     {
-//        $session = $request->getSession();
-//        $session->set('test', 'hallo 123');
-//        $session->clear();
-//        $testSession = $session->get('test');
+        if(!$this->loginService->isLoggedIn($request)){
+            return $this->redirectToRoute('login');
+        };
 
         return $this->render("index.html.twig");
     }
@@ -61,6 +88,10 @@ class IndexController extends AbstractController
         Request $request
     ): Response
     {
+        if(!$this->loginService->isLoggedIn($request)){
+            return $this->redirectToRoute('login');
+        };
+
         $message = $request->query->get('message') ?? null;
 
         return $this->render("members.html.twig", [
@@ -70,8 +101,12 @@ class IndexController extends AbstractController
 
     #[Route(path: '/new-member', name: 'new_member')]
     public function newMember(
+        Request $request
     ): Response
     {
+        if(!$this->loginService->isLoggedIn($request)){
+            return $this->redirectToRoute('login');
+        };
 
         return $this->render("new_member.html.twig");
     }
@@ -84,6 +119,10 @@ class IndexController extends AbstractController
         int $id
     ): Response
     {
+        if(!$this->loginService->isLoggedIn($request)){
+            return $this->redirectToRoute('login');
+        };
+
         $message = $request->query->get('message') ?? null;
         $isAdmin = $adminEntityService->isAdmin($id);
 
@@ -105,11 +144,15 @@ class IndexController extends AbstractController
     #[Route(path: '/edit-member/{id}', name: 'edit_member')]
     public function editMember(
         MemberEntityService $memberEntityService,
-        LocationEntityService $locationEntityService,
         AdminEntityService $adminEntityService,
+        Request $request,
         int $id
     ): Response
     {
+        if(!$this->loginService->isLoggedIn($request)){
+            return $this->redirectToRoute('login');
+        };
+
         /** @var MemberEntity $member */
         $member = $memberEntityService->get($id);
         $isAdmin = $adminEntityService->isAdmin($id);
@@ -128,13 +171,131 @@ class IndexController extends AbstractController
         ]);
     }
 
+    #[Route(path: '/save-member/{id}', name: 'save_member')]
+    public function saveMember(
+        MemberEntityService $memberEntityService,
+        LocationEntityService $locationEntityService,
+        Request $request,
+        MemberDepartmentEntityService $memberDepartmentEntityService,
+        int $id
+    ): Response
+    {
+        if(!$this->loginService->isLoggedIn($request)){
+            return $this->redirectToRoute('login');
+        };
+
+        $memberInfos = $memberEntityService->createRequestMemberAssociativeArray($request);
+        /** @var MemberEntity $member */
+        $member = $memberEntityService->get($id);
+
+        if($member->getFirstname() != $memberInfos['firstName']){
+            $member->setFirstName($memberInfos['firstName']);
+        };
+        if($member->getLastname() != $memberInfos['lastName']){
+            $member->setLastName($memberInfos['lastName']);
+        };
+        if($member->getEmail() != $memberInfos['email']){
+            $member->setEmail($memberInfos['email']);
+        };
+        if($member->getStreet() != $memberInfos['street']){
+            $member->setStreet($memberInfos['street']);
+        };
+        if($member->getBirthday() != $memberInfos['birthday']){
+            $member->setBirthday($memberInfos['birthday']);
+        };
+        if($member->getPhone() != $memberInfos['phone']){
+            $member->setPhone($memberInfos['phone']);
+        };
+
+        if($member->getHouseNumber() != $memberInfos['houseNumber']){
+            $member->setHouseNumber($memberInfos['houseNumber']);
+        };
+
+        $membersZip = $member->getLocation()->getZip();
+
+        if($membersZip != $memberInfos['zip'] ){
+            // check if locationEntity already exists and if not create new one
+            $locations = $locationEntityService->getLocationsByZip($memberInfos['zip']);
+            if(count($locations) == 0)
+            {
+                $location = new LocationEntity();
+                $location
+                    ->setZip($memberInfos['zip'])
+                    ->setLocus($memberInfos['locus'])
+                ;
+                $locationEntityService->store($location);
+            }else{
+                $location = $locations[0];
+            }
+
+            $member->setLocation($location);
+        }
+
+        $membersDepartments = $memberDepartmentEntityService->getDepartmentsOfMember($id);
+
+        if($memberEntityService->store($member)){
+            if(
+                $memberInfos['gun'] == true &&
+                !$memberEntityService->isDepartmentInDepartmentsOfMember($membersDepartments, 1)
+            ){
+                $memberDepartmentEntityService->createNewMembership($member, 1);
+            }elseif (
+                $memberInfos['gun'] != true &&
+                $memberEntityService->isDepartmentInDepartmentsOfMember($membersDepartments, 1)
+            ){
+                $memberDepartmentEntityService->removeMemberDepartmentByIds($id, 1);
+            }
+
+            if($memberInfos['bow'] == true &&
+                !$memberEntityService->isDepartmentInDepartmentsOfMember($membersDepartments, 2)
+            ){
+                $memberDepartmentEntityService->createNewMembership($member, 2);
+            }elseif (
+                $memberInfos['bow'] != true &&
+                $memberEntityService->isDepartmentInDepartmentsOfMember($membersDepartments, 2)
+            ){
+                $memberDepartmentEntityService->removeMemberDepartmentByIds($id, 2);
+            }
+
+            if($memberInfos['airPressure'] == true &&
+                !$memberEntityService->isDepartmentInDepartmentsOfMember($membersDepartments, 3)
+            ){
+                $memberDepartmentEntityService->createNewMembership($member, 3);
+            }elseif (
+                $memberInfos['airPressure'] != true &&
+                $memberEntityService->isDepartmentInDepartmentsOfMember($membersDepartments, 3)
+            ){
+                $memberDepartmentEntityService->removeMemberDepartmentByIds($id, 3);
+            }
+
+            $message = "Adjusted member with ID " . $member->getId();
+            $status = Response::HTTP_OK;
+        }else{
+            $message = "Could not adjust member.";
+            $status = Response::HTTP_BAD_REQUEST;
+        }
+
+        return $this->redirectToRoute('member', [
+                'id' => $member->getId(),
+                'message' => $message,
+                'status' => $status
+            ]
+
+        );
+    }
+
 
     #[Route(path: '/create-admin/{id}', name: 'create_admin')]
     public function createAdmin(
         MemberEntityService $memberEntityService,
+        Request $request,
         int $id
     ): Response
     {
+        if(!$this->loginService->isLoggedIn($request)){
+            return $this->redirectToRoute('login');
+        };
+
         $member = $memberEntityService->get($id);
 
         return $this->render("new_admin.html.twig", [
@@ -149,6 +310,10 @@ class IndexController extends AbstractController
         int $id
     ): Response
     {
+        if(!$this->loginService->isLoggedIn($request)){
+            return $this->redirectToRoute('login');
+        };
+
         $password = $request->request->get('password');
         $passwordConfirmation = $request->request->get('passwordConfirmation');
 
@@ -172,9 +337,14 @@ class IndexController extends AbstractController
     #[Route(path: '/edit-admin/{id}', name: 'edit_admin')]
     public function editAdmin(
         MemberEntityService $memberEntityService,
+        Request $request,
         int $id
     ): Response
     {
+        if(!$this->loginService->isLoggedIn($request)){
+            return $this->redirectToRoute('login');
+        };
+
         $member = $memberEntityService->get($id);
 
         return $this->render("edit_admin.html.twig", [
@@ -189,6 +359,10 @@ class IndexController extends AbstractController
         int $id
     ): Response
     {
+        if(!$this->loginService->isLoggedIn($request)){
+            return $this->redirectToRoute('login');
+        };
+
         $sentPassword = $request->request->get('password');
         $sentPasswordConfirmation = $request->request->get('passwordConfirmation');
 

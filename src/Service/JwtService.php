@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class JwtService
 {
-    private string $key = "test";
+    private string $key = "a?sf!dgf3543dsd2fg?dfst5!6rsrdt!g";
 
     public function __construct(protected ParameterBagInterface $parameterBag)
     {
@@ -72,6 +72,7 @@ class JwtService
         }
         return false;
     }
+
 
 
 

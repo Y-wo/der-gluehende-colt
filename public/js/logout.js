@@ -10,9 +10,9 @@ let isUserAuthentified = await jwtResponse.text()
 
 
 
-if(!await checkAccess()){
-    window.location.href = loginPath;
-}
+// if(!await checkAccess()){
+//     window.location.href = loginPath;
+// }
 
 
 

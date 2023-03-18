@@ -7,7 +7,7 @@ import {
 import {checkAccess} from "./base.js";
 
 document.addEventListener("DOMContentLoaded", async function(){
-    if(!await checkAccess()){
-        window.location.href = loginPath;
-    }
+    // if(!await checkAccess()){
+    //     window.location.href = loginPath;
+    // }
 })

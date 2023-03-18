@@ -108,9 +108,9 @@ function setAttendance(memberId, departmentId){
 
 
 document.addEventListener("DOMContentLoaded", async function(){
-    if(!await checkAccess()){
-        window.location.href = loginPath;
-    }
+    // if(!await checkAccess()){
+    //     window.location.href = loginPath;
+    // }
 
     const tableBodyMembers = $('.table-body-members');
     let members = await getMembers();
