@@ -166,12 +166,18 @@ document.addEventListener("DOMContentLoaded", async function(){
 
                 tableDataWeaponAuthorized.html(updatedWeaponAuthorizationWord)
 
+
+
                 if(updatedWeaponAuthorizationColor === "bg-danger" && tableDataWeaponAuthorized.hasClass('bg-success')){
                     tableDataWeaponAuthorized.removeClass("bg-success")
                     tableDataWeaponAuthorized.addClass('bg-danger')
+                    console.log("success -> danger")
+
                 }else if(updatedWeaponAuthorizationColor === "bg-success" && tableDataWeaponAuthorized.hasClass('bg-danger')){
                     tableDataWeaponAuthorized.removeClass("bg-danger")
                     tableDataWeaponAuthorized.addClass('bg-success')
+                    console.log("danger -> success")
+
                 }
             })
         }
