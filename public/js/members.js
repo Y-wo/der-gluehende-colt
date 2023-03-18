@@ -167,6 +167,9 @@ document.addEventListener("DOMContentLoaded", async function(){
                 tableDataWeaponAuthorized.html(updatedWeaponAuthorizationWord)
 
 
+                console.log(updatedWeaponAuthorizationColor)
+                tableDataWeaponAuthorized.hasClass('bg-success')
+                console.log(tableDataWeaponAuthorized.hasClass('bg-danger'))
 
                 if(updatedWeaponAuthorizationColor === "bg-danger" && tableDataWeaponAuthorized.hasClass('bg-success')){
                     tableDataWeaponAuthorized.removeClass("bg-success")
