@@ -2,13 +2,10 @@
 
 namespace App\Service;
 
-use App\Entity\AttendanceEntity;
 use App\Entity\MemberEntity;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\String\Slugger\SluggerInterface;
-use Symfony\Component\Validator\Constraints\Date;
-use Symfony\Component\Validator\Constraints\DateTime;
 
 class MemberEntityService extends AbstractEntityService
 {

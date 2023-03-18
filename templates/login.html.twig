@@ -12,7 +12,6 @@
         <p class="info-message">{{ message }}</p>
     {% endif %}
 
-
     <form action="{{ path('check_login') }}" method="post">
         <input type="number" class="memberId" name="memberId">
         <label for="memberId">Mitgliedsnummer</label>
@@ -23,6 +22,5 @@
         <input type="submit" class="submitButton">
 
     </form>
-
 
 {% endblock %}

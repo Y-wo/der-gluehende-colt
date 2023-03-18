@@ -6,7 +6,6 @@ use App\Entity\AbstractEntity;
 use App\Entity\AdminEntity;
 use App\Entity\MemberEntity;
 use Doctrine\ORM\EntityManagerInterface;
-use http\Env\Response;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 class AdminEntityService extends AbstractEntityService
@@ -33,7 +32,6 @@ class AdminEntityService extends AbstractEntityService
     public function getPasswortByMemberId(
         int $memberId
     )
-//    : ?string
     {
         $queryBuilder = $this
             ->entityManager

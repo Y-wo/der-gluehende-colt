@@ -8,8 +8,6 @@
 - auf Server legen
   - Routen dort anpassen (in configuration.js)
 
-- Code bereinigen
-
 - testen!
 
 

@@ -23,7 +23,6 @@ class AuthenticationService
 
         return $storedPassword;
 
-
         return $password == $storedPassword;
     }
 

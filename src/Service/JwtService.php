@@ -5,7 +5,6 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-// use App\Entity\User;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;

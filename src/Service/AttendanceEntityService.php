@@ -4,8 +4,6 @@ namespace App\Service;
 
 use App\Entity\AbstractEntity;
 use App\Entity\AttendanceEntity;
-use App\Entity\MemberEntity;
-use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
@@ -75,7 +73,6 @@ class AttendanceEntityService extends AbstractEntityService
 
     public function isMemberInDepartmentInAttendanceToday(array $attendances): bool
     {
-
         return count($attendances) > 0;
     }
 
