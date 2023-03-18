@@ -1,6 +1,6 @@
 'use strict';
 import {
-    localPath,
+    path,
     apiPath,
     countDepartments,
     attendencesPerYearForGunAuhorization,
@@ -122,7 +122,7 @@ document.addEventListener("DOMContentLoaded", async function(){
 
         // html table elements
         const tableRowMember = $(`<tr class='tr-${member.id}'></tr>`)
-        const tableDataId = $(`<td><a href="${localPath}member/${member.id}"> ${member.id} </a></td>`)
+        const tableDataId = $(`<td><a href="${path}member/${member.id}"> ${member.id} </a></td>`)
         const tableDataFirstName = $(`<td> ${member.firstName} </td>`)
         const tableDataLastName = $(`<td> ${member.lastName} </td>`)
         const tableDataDepartments = $(`<td> ${departmentNames} </td>`)
