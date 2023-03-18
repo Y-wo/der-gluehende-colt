@@ -161,15 +161,17 @@ document.addEventListener("DOMContentLoaded", async function(){
                 let updatedMember = await getMember(member.id)
                 let updatedCountedAttendances = countMembersGunAttendanceLastYear(updatedMember[0].attendanceEntities)
                 let updatedIsWeaponAuthorized = checkWeaponAuthorization(updatedCountedAttendances);
+
+                console.log("update authorisiert? - " + updatedIsWeaponAuthorized )
                 let updatedWeaponAuthorizationWord = updatedIsWeaponAuthorized ?  'ja' : 'nein';
                 let updatedWeaponAuthorizationColor = updatedIsWeaponAuthorized ? 'bg-success' : 'bg-danger'
 
                 tableDataWeaponAuthorized.html(updatedWeaponAuthorizationWord)
 
 
-                console.log(updatedWeaponAuthorizationColor)
-                tableDataWeaponAuthorized.hasClass('bg-success')
-                console.log(tableDataWeaponAuthorized.hasClass('bg-danger'))
+                // console.log(updatedWeaponAuthorizationColor)
+                // tableDataWeaponAuthorized.hasClass('bg-success')
+                // console.log(tableDataWeaponAuthorized.hasClass('bg-danger'))
 
                 if(updatedWeaponAuthorizationColor === "bg-danger" && tableDataWeaponAuthorized.hasClass('bg-success')){
                     tableDataWeaponAuthorized.removeClass("bg-success")
