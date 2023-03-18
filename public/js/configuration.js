@@ -9,6 +9,9 @@ export const remotePath = "http://www.invincible-projects.de/"
 // adjust this: the used root path
 export const path = localPath
 
-export const apiPath = `${path}api/`
+// INFO:
+// adjust this, if there are more than 3 departments
 export const countDepartments = 3;
-export const attendencesPerYearForGunAuhorization = 1;
+
+export const apiPath = `${path}api/`
+export const attendencesPerYearForGunAuhorization = 12;

@@ -1,4 +1,4 @@
-import {checkJwtStatus} from "./jwtService.js";
+
 import {apiPath, localPath, remotePath } from "./configuration.js";
 
 // export async function checkAccess(){

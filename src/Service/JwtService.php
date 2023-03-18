@@ -18,7 +18,7 @@ class JwtService
 
     public function __construct(protected ParameterBagInterface $parameterBag)
     {
-//        $this->key = $this->parameterBag->get('jwt_key');
+
     }
 
     public function createJwt() : String
@@ -34,14 +34,16 @@ class JwtService
     public function checkJwt(
         Request $request
     ) : bool{
+
+        // INFO: 'Authorization' in the fetch-header does not work
         // check, if bearer token exists in the header and if it is at the right position
-        if(!$request->headers->has('Authorization') ||
-            !strpos($request->headers->get('Authorization'), 'Bearer ') == 0)
+        if(!$request->headers->has('token') ||
+            !strpos($request->headers->get('token'), 'Bearer ') == 0)
         {
             return false;
         }
 
-        $jwt = substr($request->headers->get('Authorization'), 7);
+        $jwt = substr($request->headers->get('token'), 7);
         $decoded = JWT::decode($jwt, new Key($this->key, 'HS256'));
         $decoded_array = (array) $decoded;
 
@@ -50,30 +52,5 @@ class JwtService
         }
         return false;
     }
-
-    //checks sent jwt
-    public function checkSentJwt(
-        string $jwt
-    )
-//    : bool
-    {
-
-        try{
-            $decoded = JWT::decode($jwt, new Key($this->key, 'HS256')) ?? false;
-        }catch(\Exception $exception){
-            return false;
-        }
-
-
-        $decoded_array = (array) $decoded;
-
-        if($decoded_array['role'] == 'admin'){
-            return true;
-        }
-        return false;
-    }
-
-
-
 
 }

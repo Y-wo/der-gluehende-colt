@@ -2,16 +2,20 @@
 import {
     apiPath
 } from "./configuration.js"
+import {getJwt, getJwtReponse, setJwt} from "./jwtService.js";
 
 function getMembersWhoseBirtdayIsComing(){
+    let jwt = getJwt()
+
     return fetch(apiPath + "birthdays",
         {
             method: "POST",
-            headers: {
-            },
             body:
                 JSON.stringify({
-                })
+                }),
+            headers:{
+                "token" : 'Bearer ' + jwt,
+            }
         }
     )
         .then(async function (response) {
@@ -21,6 +25,15 @@ function getMembersWhoseBirtdayIsComing(){
 
 
 document.addEventListener("DOMContentLoaded", async function(){
+    let jwtResponse = await getJwtReponse()
+
+    if(jwtResponse.status === 200){
+        let jwt = await jwtResponse.text()
+        setJwt(jwt)
+        console.log("jwt gesetzt")
+    }
+
+
     const birthdaysTable = $('.birthdays-table')
     const birtdayDiv = $('.birthday-div')
 

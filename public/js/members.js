@@ -5,17 +5,21 @@ import {
     countDepartments,
     attendencesPerYearForGunAuhorization,
 } from "./configuration.js";
+import {getJwt} from "./jwtService.js";
+
+const jwt = getJwt()
 
 // gets all members from server
 async function getMembers(){
     return fetch(apiPath + "member",
         {
             method: "POST",
-            headers: {
-            },
             body:
                 JSON.stringify({
-                })
+                }),
+            headers:{
+                "token" : 'Bearer ' + jwt,
+            }
         }
     )
         .then(async function (response) {
@@ -28,11 +32,12 @@ function getMember(id){
     return fetch(apiPath + `member/${id}`,
         {
             method: "POST",
-            headers: {
-            },
             body:
                 JSON.stringify({
-                })
+                }),
+            headers:{
+                "token" : 'Bearer ' + jwt,
+            }
         }
     )
         .then(async function (response) {
@@ -98,11 +103,12 @@ function setAttendance(memberId, departmentId){
     return fetch(apiPath + `handle-attendance/${memberId}/${departmentId}`,
         {
             method: "POST",
-            headers: {
-            },
             body:
                 JSON.stringify({
-                })
+                }),
+            headers:{
+                "token" : 'Bearer ' + jwt,
+            }
         }
     )
 }

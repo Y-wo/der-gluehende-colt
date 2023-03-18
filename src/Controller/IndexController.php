@@ -69,8 +69,6 @@ class IndexController extends AbstractController
         return $this->redirectToRoute('login');
     }
 
-
-
     #[Route(path: '/', name: 'index')]
     public function index(
         Request $request
@@ -282,6 +280,109 @@ class IndexController extends AbstractController
             ]
 
         );
+    }
+
+    #[Route(path: '/delete-member/{id}', name: 'delete_member')]
+    public function deleteMember(
+        MemberEntityService $memberEntityService,
+        Request $request,
+        int $id
+    ): Response
+    {
+        if(!$this->loginService->isLoggedIn($request)){
+            return $this->redirectToRoute('login');
+        };
+
+        $memberEntityService->setMemberDeleted($id);
+        $message = "Deleted member with ID " . $id;
+        return $this->redirectToRoute("members", [
+            'message' => $message
+        ]);
+    }
+
+
+    #[Route(path: '/create-new-member', name: 'create_new_member')]
+    public function createNewMember(
+        MemberEntityService $memberEntityService,
+        LocationEntityService $locationEntityService,
+        MemberDepartmentEntityService $memberDepartmentEntityService,
+        Request $request,
+    ): Response
+    {
+        if(!$this->loginService->isLoggedIn($request)){
+            return $this->redirectToRoute('login');
+        };
+
+        $newMember = new MemberEntity();
+
+        $firstName = $request->request->get('firstName');
+        $lastName = $request->request->get('lastName');
+        $email = $request->request->get('email');
+        $street = $request->request->get('street');
+        $houseNumber = $request->request->get('houseNumber');
+        $zip = $request->request->get('zip');
+        $locus = $request->request->get('locus');
+        $phone = $request->request->get('phone');
+        $birthday = new \DateTime($request->request->get('birthday'));
+        $gun = $request->request->get('gun');
+        $bow = $request->request->get('bow');
+        $airPressure = $request->request->get('airPressure');
+        $createdAt = new \DateTimeImmutable();
+
+
+        // check if locationEntity already exists and if not create new one
+        $locations = $locationEntityService->getLocationsByZip($zip);
+        if(count($locations) == 0)
+        {
+            $location = new LocationEntity();
+            $location
+                ->setZip($zip)
+                ->setLocus($locus)
+            ;
+            $locationEntityService->store($location);
+        }else{
+            $location = $locations[0];
+        }
+
+        $newMember
+            ->setFirstName($firstName)
+            ->setLastName($lastName)
+            ->setEmail($email)
+            ->setStreet($street)
+            ->setHouseNumber($houseNumber)
+            ->setPhone($phone)
+            ->setBirthday($birthday)
+            ->setLocation($location)
+            ->setCreatedAt($createdAt)
+            ->setDeleted(0)
+        ;
+
+        if($memberEntityService->store($newMember)){
+
+            if($gun){
+                $memberDepartmentEntityService->createNewMembership($newMember, 1);
+            }
+
+            if($bow){
+                $memberDepartmentEntityService->createNewMembership($newMember, 2);
+            }
+
+            if($airPressure){
+                $memberDepartmentEntityService->createNewMembership($newMember, 3);
+            }
+
+            $message = "Created new member with ID " . $newMember->getId();
+            $status = Response::HTTP_OK;
+        }else{
+            $message = "Could not create new Member.";
+            $status = Response::HTTP_BAD_REQUEST;
+        }
+
+        return $this->redirectToRoute('members', [
+            $message,
+            $status
+        ]);
+
     }
 
 

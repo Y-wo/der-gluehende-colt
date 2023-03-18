@@ -2,24 +2,15 @@
 
 namespace App\Controller;
 
-use App\Entity\AdminEntity;
-use App\Entity\AttendanceEntity;
-use App\Entity\LocationEntity;
-use App\Entity\MemberDepartmentEntity;
-use App\Entity\MemberEntity;
-use App\Service\AdminEntityService;
 use App\Service\AttendanceEntityService;
 use App\Service\DepartmentEntityService;
 use App\Service\JwtService;
 use App\Service\LocationEntityService;
+use App\Service\LoginService;
 use App\Service\MemberDepartmentEntityService;
 use App\Service\MemberEntityService;
 use App\Service\ResponseService;
-use App\Service\SerializerService;
-
-use Monolog\DateTimeImmutable;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -27,65 +18,45 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route(path: '/api', name: 'api_')]
 class ApiController extends AbstractController
 {
-    #[Route(path: '/get-jwt', name: 'get_jwt')]
-    public function getJwt(
-        MemberEntityService $memberEntityService,
-        AdminEntityService $adminEntityService,
-        JwtService $jwtService,
-        Request $request
-    ): Response
+    private LoginService $loginService;
+    private JwtService $jwtService;
+
+    public function __construct(
+        LoginService $loginService,
+        JwtService $jwtService
+    )
     {
-        $dataFromClient = $request->getContent();
-        $dataFromClient = json_decode($dataFromClient,true);
-        $sentPassword = $dataFromClient['password'];
-        $sentMemberId = $dataFromClient['memberId'];
-
-        $member = $memberEntityService->get($sentMemberId);
-
-        if(!$member) {
-            $message = "Login nicht möglich.";
-            return new Response($message, Response::HTTP_BAD_REQUEST);
-        }
-
-        $isAdmin = $adminEntityService->isAdmin($member->getId());
-
-        if(!$isAdmin){
-            $message = "Login nicht möglich.";
-            return new Response($message, Response::HTTP_BAD_REQUEST);
-        }
-
-        $sentHashedPassword = hash('md5', $sentPassword);
-        $storedPassword = $adminEntityService->getPasswortByMemberId($sentMemberId);
-
-        if($sentHashedPassword == $storedPassword){
-            return new Response($jwtService->createJwt(), Response::HTTP_OK);
-        }else{
-            $message = "Login nicht möglich.";
-            return new Response($message, Response::HTTP_BAD_REQUEST);
-        }
+        $this->loginService = $loginService;
+        $this->jwtService = $jwtService;
     }
 
-    #[Route(path: '/check-jwt', name: 'check_jwt')]
-    public function checkJwt(
-        JwtService $jwtService,
+    #[Route(path: '/get-jwt', name: 'get_jwt')]
+    public function getJwt(
         Request $request
     ): Response
     {
-        $dataFromClient = $request->getContent();
-        $dataFromClient = json_decode($dataFromClient,true);
-        $sentJwt = $dataFromClient['jwt'] ?? "";
-        $isAuthenticated = $jwtService->checkSentJwt($sentJwt);
-        $isAuthenticated = $isAuthenticated ? "true" : "false";
-        return new Response($isAuthenticated);
+        if(!$this->loginService->isLoggedIn($request)){
+            return new Response('no access',Response::HTTP_BAD_REQUEST);
+        };
+
+        $session = $request->getSession();
+        $jwt = $session->get('jwt');
+
+        return new Response($jwt, Response::HTTP_OK);
     }
 
 
     #[Route(path: '/member', name: 'get_members')]
     public function returnMembers(
         MemberEntityService $memberEntityService,
-        ResponseService $responseService
+        ResponseService $responseService,
+        Request $request
     ): Response
     {
+        if(!$this->jwtService->checkJwt($request)){
+            return new Response("no access", Response::HTTP_BAD_REQUEST);
+        }
+
         $members = $memberEntityService
             ->getAllMembers();
 
@@ -97,116 +68,32 @@ class ApiController extends AbstractController
     public function returnMember(
         MemberEntityService $memberEntityService,
         ResponseService $responseService,
+        Request $request,
         int $id
     ): Response
     {
+        if(!$this->jwtService->checkJwt($request)){
+            return new Response("no access", Response::HTTP_BAD_REQUEST);
+        }
+
         $member = $memberEntityService
             ->getMember($id);
 
         return $responseService->convertObjectToJsonResponse($member);
     }
 
-    #[Route(path: '/create-member', name: 'create_member')]
-    public function createNewMember(
-        MemberEntityService $memberEntityService,
-        LocationEntityService $locationEntityService,
-        MemberDepartmentEntityService $memberDepartmentEntityService,
-        Request $request,
-    ): Response
-    {
-        $newMember = new MemberEntity();
-
-        $firstName = $request->request->get('firstName');
-        $lastName = $request->request->get('lastName');
-        $email = $request->request->get('email');
-        $street = $request->request->get('street');
-        $houseNumber = $request->request->get('houseNumber');
-        $zip = $request->request->get('zip');
-        $locus = $request->request->get('locus');
-        $phone = $request->request->get('phone');
-        $birthday = new \DateTime($request->request->get('birthday'));
-        $gun = $request->request->get('gun');
-        $bow = $request->request->get('bow');
-        $airPressure = $request->request->get('airPressure');
-        $createdAt = new \DateTimeImmutable();
-
-
-        // check if locationEntity already exists and if not create new one
-        $locations = $locationEntityService->getLocationsByZip($zip);
-        if(count($locations) == 0)
-        {
-            $location = new LocationEntity();
-            $location
-                ->setZip($zip)
-                ->setLocus($locus)
-                ;
-            $locationEntityService->store($location);
-        }else{
-            $location = $locations[0];
-        }
-
-        $newMember
-            ->setFirstName($firstName)
-            ->setLastName($lastName)
-            ->setEmail($email)
-            ->setStreet($street)
-            ->setHouseNumber($houseNumber)
-            ->setPhone($phone)
-            ->setBirthday($birthday)
-            ->setLocation($location)
-            ->setCreatedAt($createdAt)
-            ->setDeleted(0)
-        ;
-
-        if($memberEntityService->store($newMember)){
-
-            if($gun){
-                $memberDepartmentEntityService->createNewMembership($newMember, 1);
-            }
-
-            if($bow){
-                $memberDepartmentEntityService->createNewMembership($newMember, 2);
-            }
-
-            if($airPressure){
-                $memberDepartmentEntityService->createNewMembership($newMember, 3);
-            }
-
-            $message = "Created new member with ID " . $newMember->getId();
-            $status = Response::HTTP_OK;
-        }else{
-            $message = "Could not create new Member.";
-            $status = Response::HTTP_BAD_REQUEST;
-        }
-
-        return $this->redirectToRoute('members', [
-            $message,
-            $status
-        ]);
-
-    }
-
-
-    #[Route(path: '/delete-member/{id}', name: 'delete_member')]
-    public function deleteMember(
-        MemberEntityService $memberEntityService,
-        int $id
-    ): Response
-    {
-        $memberEntityService->setMemberDeleted($id);
-        $message = "Deleted member with ID " . $id;
-        return $this->redirectToRoute("members", [
-            'message' => $message
-        ]);
-    }
-
 
     #[Route(path: '/birthdays', name: 'get_birthdays')]
     public function getBirthdays(
         MemberEntityService $memberEntityService,
-        ResponseService $responseService
+        ResponseService $responseService,
+        Request $request
     ): Response
     {
+        if(!$this->jwtService->checkJwt($request)){
+            return new Response("no access", Response::HTTP_BAD_REQUEST);
+        }
+
         $members = $memberEntityService
             ->getMembersWhoseBirthdayIsComing();
 
@@ -217,9 +104,14 @@ class ApiController extends AbstractController
     #[Route(path: '/attendance', name: 'get_attendance')]
     public function returnAttendance(
         AttendanceEntityService $attendanceEntityService,
-        ResponseService $responseService
+        ResponseService $responseService,
+        Request $request
     ): Response
     {
+        if(!$this->jwtService->checkJwt($request)){
+            return new Response("no access", Response::HTTP_BAD_REQUEST);
+        }
+
         $attendance = $attendanceEntityService->getAll();
         return $responseService->convertObjectToJsonResponse($attendance);
     }
@@ -228,10 +120,15 @@ class ApiController extends AbstractController
     #[Route(path: '/handle-attendance/{memberId}/{departmentId}', name: 'attendance')]
     public function handleAttendance(
         AttendanceEntityService $attendanceEntityService,
+        Request $request,
         int $memberId,
         int $departmentId
     ): Response
     {
+        if(!$this->jwtService->checkJwt($request)){
+            return new Response("no access", Response::HTTP_BAD_REQUEST);
+        }
+
         $membersDepartmentAttendancesToday = $attendanceEntityService
             ->getMembersDepartmentAttendancesToday($memberId, $departmentId);
 
@@ -270,9 +167,14 @@ class ApiController extends AbstractController
     #[Route(path: '/department', name: 'get_department')]
     public function returnDepartment(
         DepartmentEntityService $departmentEntityService,
-        ResponseService $responseService
+        ResponseService $responseService,
+        Request $request
     ): Response
     {
+        if(!$this->jwtService->checkJwt($request)){
+            return new Response("no access", Response::HTTP_BAD_REQUEST);
+        }
+
         $department = $departmentEntityService->getAll();
         return $responseService->convertObjectToJsonResponse($department);
     }
@@ -281,9 +183,14 @@ class ApiController extends AbstractController
     #[Route(path: '/location', name: 'get_location')]
     public function returnLocation(
         LocationEntityService $locationEntityService,
-        ResponseService $responseService
+        ResponseService $responseService,
+        Request $request
     ): Response
     {
+        if(!$this->jwtService->checkJwt($request)){
+            return new Response("no access", Response::HTTP_BAD_REQUEST);
+        }
+
         $location = $locationEntityService->getAll();
         return $responseService->convertObjectToJsonResponse($location);
     }
@@ -292,9 +199,14 @@ class ApiController extends AbstractController
     #[Route(path: '/member-department', name: 'get_member_department')]
     public function returnMemberDepartment(
         MemberDepartmentEntityService $memberDepartmentEntityService,
-        ResponseService $responseService
+        ResponseService $responseService,
+        Request $request
     ): Response
     {
+        if(!$this->jwtService->checkJwt($request)){
+            return new Response("no access", Response::HTTP_BAD_REQUEST);
+        }
+
         $memberDepartment = $memberDepartmentEntityService->getAll();
         return $responseService->convertObjectToJsonResponse($memberDepartment);
     }

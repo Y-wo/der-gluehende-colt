@@ -11,8 +11,6 @@ use Symfony\Component\Serializer\Annotation\Ignore;
 class AttendanceEntity extends AbstractEntity
 {
 
-//    Wert vorher hier: private ?int $id = null;
-
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
