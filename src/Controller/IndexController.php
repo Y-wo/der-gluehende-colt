@@ -266,10 +266,10 @@ class IndexController extends AbstractController
                 $memberDepartmentEntityService->removeMemberDepartmentByIds($id, 3);
             }
 
-            $message = "Adjusted member with ID " . $member->getId();
+            $message = "Mitglied angepasst mit der ID " . $member->getId();
             $status = Response::HTTP_OK;
         }else{
-            $message = "Could not adjust member.";
+            $message = "Mitgliedanpassung nicht möglich.";
             $status = Response::HTTP_BAD_REQUEST;
         }
 
@@ -294,7 +294,7 @@ class IndexController extends AbstractController
         };
 
         $memberEntityService->setMemberDeleted($id);
-        $message = "Deleted member with ID " . $id;
+        $message = "Mitglied gelöscht mit der ID " . $id;
         return $this->redirectToRoute("members", [
             'message' => $message
         ]);
@@ -371,16 +371,16 @@ class IndexController extends AbstractController
                 $memberDepartmentEntityService->createNewMembership($newMember, 3);
             }
 
-            $message = "Created new member with ID " . $newMember->getId();
+            $message = "Neues Mitglied angelegt mit der ID " . $newMember->getId();
             $status = Response::HTTP_OK;
         }else{
-            $message = "Could not create new Member.";
+            $message = "Neuanlegung nicht möglich.";
             $status = Response::HTTP_BAD_REQUEST;
         }
 
         return $this->redirectToRoute('members', [
-            $message,
-            $status
+            "message" => $message,
+            "status" => $status
         ]);
 
     }
@@ -421,13 +421,13 @@ class IndexController extends AbstractController
         if ($password == $passwordConfirmation){
             $adminEntityService->createAdmin($id, $password);
 
-            $message = "New Admin created with ID " . $id;
+            $message = "Neuer Administrator angelegt mit der ID " . $id;
             return $this->redirectToRoute('member', [
                 'id' => $id,
                 'message' => $message,
             ]);
         }
-        $message = "Could not create new admin " . $id;
+        $message = "Konnte keinen neuen Administrator anlegen - ID " . $id;
         return $this->redirectToRoute('member', [
             'id' => $id,
             'message' => $message,
@@ -470,13 +470,13 @@ class IndexController extends AbstractController
         if ($sentPassword == $sentPasswordConfirmation){
             $adminEntityService->changePassword($id, $sentPassword );
 
-            $message = "Password changed of member with ID" . $id;
+            $message = "Passwort verändert für Mitglied mit der ID" . $id;
             return $this->redirectToRoute('member', [
                 'id' => $id,
                 'message' => $message,
             ]);
         }
-        $message = "Could not change password of member with ID " . $id;
+        $message = "Konnte Paswort nicht anpassen für Mitglied mit der ID " . $id;
         return $this->redirectToRoute('member', [
             'id' => $id,
             'message' => $message,

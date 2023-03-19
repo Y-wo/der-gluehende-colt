@@ -19,16 +19,6 @@ class AdminEntityService extends AbstractEntityService
     public static $entityFqn = AdminEntity::class;
     public $memberEntityService;
 
-    public function getEmail() : String
-    {
-        /** @var AdminEntity $admin */
-        $admin = $this->get(2);
-        /** @var MemberEntity $adminMember */
-        $adminMember = $admin->getMember();
-        $email = $adminMember->getEmail();
-        return $email;
-    }
-
     public function getPasswortByMemberId(
         int $memberId
     )
