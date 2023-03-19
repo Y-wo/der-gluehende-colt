@@ -10,7 +10,7 @@
         tab : 'members'
     }%}
 
-    <div class="container-md member-div">
+    <div class="container-md member-div vh-100 justify-content-center">
 
         <h2 class="pb-5 text-decoration-underline">Mitglied:</h2>
 
@@ -35,11 +35,11 @@
                 {% endfor %}
             </p>
 
-        <div class="w-100 d-flex justify-content-center">
+        <div class="w-100">
             <div class="w-50">
-                <a class="btn bg-success col-3" href="{{ path('members') }}">Zurück</a>
-                <a class="btn bg-danger col-3" href="{{ path('delete_member', {id: member.id}) }}">Löschen</a>
-                <a class="btn bg-info col-3" href="{{ path('edit_member', { id: member.id }) }}">Bearbeiten</a>
+                <a class="btn btn-btn btn-dark col-3" href="{{ path('members') }}">Zurück</a>
+                <a class="btn btn-btn btn-dark col-3" href="{{ path('edit_member', { id: member.id }) }}">Bearbeiten</a>
+                <a class="btn btn-btn btn-dark col-3" style="color: red" href="{{ path('delete_member', {id: member.id}) }}">Löschen</a>
             </div>
         </div>
 

@@ -10,62 +10,57 @@
         tab : 'members'
     }%}
 
-    <div class="container-md member-div">
-
-        <h2 class="text-decoration-underline">Neues Mitglied</h2>
-
+    <div class="container-md member-div vh-100">
         <div class="d-flex justify-content-center">
-            <form class="d-flex flex-column w-25" action="{{ path('create_new_member') }}" method="post">
+            <form class="d-flex flex-column w-35" action="{{ path('create_new_member') }}" method="post">
 
-                <h3>Personen Daten</h3>
+                <h3>Neues Mitglied anlegen</h3>
 
-                <input name="firstName" type="text" required>
                 <label for="firstName">Vorname</label>
+                <input name="firstName" type="text" required>
 
-                <input name="lastName" type="text" required>
                 <label for="lastName">Nachname</label>
+                <input name="lastName" type="text" required>
 
-                <input name="email" type="email" required>
                 <label for="email">E-Mail</label>
+                <input name="email" type="email" required>
 
-                <input name="street" type="text" required>
                 <label for="street">Straße</label>
+                <input name="street" type="text" required>
 
-                <input name="houseNumber" type="text" required>
                 <label for="houseNumber">Hausnummer</label>
+                <input name="houseNumber" type="text" required>
 
-                <input name="zip" type="text">
                 <label for="zip">Postleitzahl</label>
+                <input name="zip" type="number">
 
-                <input name="locus" type="text">
                 <label for="locus">Ort</label>
+                <input name="locus" type="text">
 
-                <input name="phone" type="number" required>
                 <label for="phone">Telefonnummer</label>
+                <input name="phone" type="number" required>
 
-                <input name="birthday" type="date" required>
                 <label for="birthday">Geburtstag</label>
+                <input name="birthday" type="date" required>
 
-                <h3>Abteilungen</h3>
-
-                <div class="d-flex">
-                    <input name="gun" type="checkbox" value="true">
-                    <label for="gun">Schusswaffen</label>
-                </div>
-
-                <div class="d-flex">
-                    <input name="bow" type="checkbox" value="true">
-                    <label for="bow">Bogen</label>
-                </div>
-
-                <div class="d-flex">
-                    <input name="airPressure" type="checkbox" value="true">
-                    <label for="airPressure">Luftdruck</label>
-                </div>
-
-                <div class="pt-5 d-flex justify-content-between row" >
-                    <a class="col-4 btn bg-danger " href="{{ path('members') }}">Abbrechen</a>
-                    <input class="col-4 btn bg-success" type="submit" value="Anlegen" name="create">
+                <fieldset>
+                    <legend #departmentlegend>Abteilungen</legend>
+                    <div class="departmentcontainer">
+                        <input name="gun" type="checkbox" value="true">
+                        <label for="gun">Schusswaffen</label>
+                    </div>
+                    <div class="departmentcontainer">
+                        <input name="bow" type="checkbox" value="true">
+                        <label for="bow">Bogen</label>
+                    </div>
+                    <div class="departmentcontainer">
+                        <input name="airPressure" type="checkbox" value="true">
+                        <label for="airPressure">Luftdruck</label>
+                    </div>
+                </fieldset>
+                <div class="pt-3 d-flex justify-content-between row">
+                    <a class="col-5 btn btn-dark " href="{{ path('members') }}">Abbrechen</a>
+                    <input class="col-5 btn btn-dark" type="submit" value="Anlegen" name="create">
                 </div>
 
             </form>

@@ -36,7 +36,7 @@
                 <input name="houseNumber" type="text" value="{{ member.houseNumber }}" required>
                 <label for="houseNumber">Hausnummer</label>
 
-                <input name="zip" type="text "value="{{ member.location.zip }}" required>
+                <input name="zip" type="number "value="{{ member.location.zip }}" required>
                 <label for="zip">Postleitzahl</label>
 
                 <input name="locus" type="text" value="{{ member.location.locus }}" required>
@@ -66,14 +66,14 @@
                 </div>
 
                 <div class="pt-5 d-flex justify-content-between row" >
-                    <a class="btn bg-success col-4" href="{{ path('member', { id: member.id}) }}">Zurück</a>
+                    <a class="btn btn-dark col-4 d-flex flex-column justify-content-center" href="{{ path('member', { id: member.id}) }}">Zurück</a>
 
                     {% if isAdmin == true %}
-                        <a class="btn bg-warning col-4" href="{{ path('edit_admin', {id: member.id}) }}">Passwort ändern</a>
+                        <a class="btn btn-dark col-4" href="{{ path('edit_admin', {id: member.id}) }}">Passwort ändern</a>
                     {% else %}
-                        <a href="{{ path('create_admin', {id: member.id}) }}" class="btn bg-warning col-4">Zu Admin machen</a>
+                        <a href="{{ path('create_admin', {id: member.id}) }}" class="btn btn-dark col-4">Zu Admin machen</a>
                     {% endif %}
-                    <input class="col-4 btn bg-info" type="submit" value="Speichern" name="save">
+                    <input class="col-4 btn btn-dark" type="submit" value="Speichern" name="save">
                 </div>
             </form>
         </div>

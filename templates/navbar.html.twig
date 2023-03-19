@@ -5,7 +5,7 @@
 {% set last_name = app.session.get('lastName') ?? null %}
 {% set member_id = app.session.get('memberId') ?? null %}
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
 
         <a class="navbar-brand" href="{{ path('index') }}">Der glühende Colt</a>
@@ -13,7 +13,7 @@
         {% if login_state == 'true' %}
 
            <div>
-               <p class="text-success m-0"> Hallo {{ first_name }} {{ last_name }}</p>
+               <p class="nav-link"> User: {{ first_name }} {{ last_name }}</p>
            </div>
 
         {% endif %}

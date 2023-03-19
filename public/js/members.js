@@ -124,19 +124,22 @@ document.addEventListener("DOMContentLoaded", async function(){
         const departmentNames = getDepartmentNames(member.memberDepartmentEntities);
         let countedAttendances = countMembersGunAttendanceLastYear(member.attendanceEntities)
         let isWeaponAuthorized = checkWeaponAuthorization(countedAttendances)
-        let weaponAutorizationWord = isWeaponAuthorized ? 'ja' : 'nein'
+        let weaponAutorizationWord = isWeaponAuthorized ? 'Ja' : 'Nein'
         let weaponAuthorizationColor = isWeaponAuthorized ? 'bg-success' : 'bg-danger'
         // const isMemberTodayHere = isMemberHereToday(member.attendanceEntities)
         const departmentsWhereMemberIsInAttendanceToday = getDepartmentsWhereMemberIsInAttendanceToday(member.attendanceEntities)
 
         // html table elements
-        const tableRowMember = $(`<tr class='tr-${member.id}'></tr>`)
-        const tableDataId = $(`<td><a href="${path}member/${member.id}"> ${member.id} </a></td>`)
+        const tableRowMember = $(`<tr class='tr-${member.id} align-middle'></tr>`)
+        const tableDataId = $(`<td><a href="${path}member/${member.id}" class="btn btn-outline-dark" style="text-decoration: none;"> ${member.id} </a></td>`)
         const tableDataFirstName = $(`<td> ${member.firstName} </td>`)
         const tableDataLastName = $(`<td> ${member.lastName} </td>`)
         const tableDataDepartments = $(`<td> ${departmentNames} </td>`)
-        let tableDataWeaponAuthorized = $(`<td class="weapon-autorization-${member.id} ${weaponAuthorizationColor} rounded"> ${weaponAutorizationWord} </td>`)
-        const tableDataForCheckboxes = $(`<td></td>`)
+        let tableDataWeaponAuthorized = $(`<td class="weapon-autorization-${member.id} ${weaponAuthorizationColor} rounded text-center"> ${weaponAutorizationWord} </td>`)
+        const tableDataForCheckboxes = $(`<td> <div class="d-flex d-column"></div></td>`)
+        const divForCheckboxes = $(`<div class="div-for-checkboxes-${member.id} d-flex flex-column"></div>`)
+
+        tableDataForCheckboxes.append(divForCheckboxes)
 
         tableBodyMembers.append(tableRowMember)
         tableRowMember.append(tableDataId, tableDataFirstName, tableDataLastName, tableDataDepartments, tableDataForCheckboxes)
@@ -149,11 +152,14 @@ document.addEventListener("DOMContentLoaded", async function(){
             let departmentName = entry.department.name
 
             let checkboxDepartment = $(`<input type="checkbox" data-department="${departmentId}" data-member="${member.id}">${departmentName}</input>`)
+            let checkboxWrapper = $('<div></div>')
+            checkboxWrapper.append(checkboxDepartment)
 
             // set checkbox checked, if member is in attendance today
             if(departmentsWhereMemberIsInAttendanceToday.includes(departmentId)) checkboxDepartment.prop("checked", true)
 
-            tableDataForCheckboxes.append(checkboxDepartment)
+            divForCheckboxes.append(checkboxWrapper)
+            // tableDataForCheckboxes.append(checkboxDepartment)
 
             // add click-EventListener for setting/unsetting the attendance today
             checkboxDepartment.click(async function(event){
@@ -169,7 +175,7 @@ document.addEventListener("DOMContentLoaded", async function(){
 
                 let updatedIsWeaponAuthorized = checkWeaponAuthorization(updatedCountedAttendances);
 
-                let updatedWeaponAuthorizationWord = updatedIsWeaponAuthorized ?  'ja' : 'nein';
+                let updatedWeaponAuthorizationWord = updatedIsWeaponAuthorized ?  'Ja' : 'Nein';
                 let updatedWeaponAuthorizationColor = updatedIsWeaponAuthorized ? 'bg-success' : 'bg-danger'
 
                 tableDataWeaponAuthorized.html(updatedWeaponAuthorizationWord)
