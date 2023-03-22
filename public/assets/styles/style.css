@@ -3,6 +3,7 @@ body {
 }
 .nav-link {
     color: #6fa2f5;
+    font-size: 0.95rem;
 }
 h1, h2, h3, h4, h5 {
     padding: 1rem 0;

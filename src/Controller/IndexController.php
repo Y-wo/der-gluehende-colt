@@ -81,6 +81,7 @@ class IndexController extends AbstractController
         return $this->render("index.html.twig");
     }
 
+
     #[Route(path: '/members', name: 'members')]
     public function members(
         Request $request
@@ -97,6 +98,7 @@ class IndexController extends AbstractController
         ]);
     }
 
+
     #[Route(path: '/new-member', name: 'new_member')]
     public function newMember(
         Request $request
@@ -108,6 +110,7 @@ class IndexController extends AbstractController
 
         return $this->render("new_member.html.twig");
     }
+
 
     #[Route(path: '/member/{id}', name: 'member')]
     public function member(
@@ -139,6 +142,7 @@ class IndexController extends AbstractController
         ]);
     }
 
+
     #[Route(path: '/edit-member/{id}', name: 'edit_member')]
     public function editMember(
         MemberEntityService $memberEntityService,
@@ -168,6 +172,7 @@ class IndexController extends AbstractController
             'isAdmin' => $isAdmin,
         ]);
     }
+
 
     #[Route(path: '/save-member/{id}', name: 'save_member')]
     public function saveMember(
@@ -281,6 +286,7 @@ class IndexController extends AbstractController
 
         );
     }
+
 
     #[Route(path: '/delete-member/{id}', name: 'delete_member')]
     public function deleteMember(
@@ -403,6 +409,30 @@ class IndexController extends AbstractController
             'member' => $member,
         ]);
     }
+
+
+    #[Route(path: '/execute-removement-admin/{id}', name: 'execute_removement_admin')]
+    public function executeRemovementAdmin(
+        AdminEntityService $adminEntityService,
+        Request $request,
+        int $id
+    ): Response
+    {
+        if(!$this->loginService->isLoggedIn($request)){
+            return $this->redirectToRoute('login');
+        };
+
+        $adminEntityService->removeAdmin($id);
+
+        $message = "Admin gelöscht mit der Mitgliedsnummer " . $id;
+
+        return $this->redirectToRoute('member', [
+            'id' => $id,
+            'message' => $message
+        ]);
+
+    }
+
 
     #[Route(path: '/execute-creation-admin/{id}', name: 'execute_creation_admin')]
     public function executeCreationAdmin(

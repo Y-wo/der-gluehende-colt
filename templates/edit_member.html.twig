@@ -65,16 +65,20 @@
                     <label for="airPressure">Luftdruck</label>
                 </div>
 
-                <div class="pt-5 d-flex justify-content-between row" >
-                    <a class="btn btn-dark col-4 d-flex flex-column justify-content-center" href="{{ path('member', { id: member.id}) }}">Zurück</a>
-
+                <div class="pt-5 d-flex {% if isAdmin == true %} justify-content-around {% else %} justify-content-end {% endif %} row" >
                     {% if isAdmin == true %}
-                        <a class="btn btn-dark col-4" href="{{ path('edit_admin', {id: member.id}) }}">Passwort ändern</a>
+                        <a class="btn btn-dark col-5" href="{{ path('edit_admin', {id: member.id}) }}">Passwort ändern</a>
+                        <a class="btn btn-dark col-5" href="{{ path('execute_removement_admin', {id: member.id}) }}">Admin löschen</a>
                     {% else %}
-                        <a href="{{ path('create_admin', {id: member.id}) }}" class="btn btn-dark col-4">Zu Admin machen</a>
+                        <a href="{{ path('create_admin', {id: member.id}) }}" class="btn btn-dark col-5">Zu Admin machen</a>
                     {% endif %}
-                    <input class="col-4 btn btn-dark" type="submit" value="Speichern" name="save">
                 </div>
+
+                <div class="pt-3 d-flex {% if isAdmin == true %} justify-content-around {% else %} justify-content-between {% endif %} row" >
+                    <a class="btn btn-dark col-5 d-flex flex-column justify-content-center" href="{{ path('member', { id: member.id}) }}">Zurück</a>
+                    <input class="col-5 btn btn-dark" type="submit" value="Speichern" name="save">
+                </div>
+
             </form>
         </div>
 

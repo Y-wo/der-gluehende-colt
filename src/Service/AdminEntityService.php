@@ -146,8 +146,4 @@ class AdminEntityService extends AbstractEntityService
         return $result;
     }
 
-    public function hashPassword(){
-
-    }
-
 }
