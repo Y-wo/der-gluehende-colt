@@ -1,10 +1,11 @@
 body {
-    background: #358cc5;  /* fallback for old browsers */
+    background: lightgrey;
 }
 .nav-link {
-    color: #6fa2f5;
-    font-size: 0.95rem;
+    color: white;
+    font-size: 1rem;
 }
+
 h1, h2, h3, h4, h5 {
     padding: 1rem 0;
 }
@@ -16,45 +17,48 @@ p{
 input[type=checkbox]{
     transform: scale(1.8);
     margin-right: 0.5rem;
+    accent-color: darkslategrey !important;
 }
 
 input, select {
-    border-radius: 4px;
+    border-radius: 3px;
+}
+
+.logout-btn{
+    border-color: lightgrey;
+    font-weight: bold;
+    padding: .5rem;
+}
+
+.logout-btn:hover{
+    background-color: black;
 }
 
 .navbar-brand{
-    color: #6fa2f5;
+    color: white;
+    font-size: 1.5rem;
+}
+
+.navbar-brand:hover, .nav-link:hover{
+    color: lightgrey;
+    font-weight: bold;
 }
 
 label, legend{
     font-family: 'lato', sans-serif;
     color: black;
-    padding-top: 0.3rem;
-    font-size: 1.05rem;
+    padding-top: 0.5rem;
+    font-size: 1rem;
 }
 
-form > h3{
-    color:black;
-}
-#user{
-    color:white;
-}
-#user:hover{
-    color: white;;
-}
-#abteilungsheader{
-    font-size: 1.1rem;
-    font-style: normal;
-    font-family: 'lato', sans-serif;
-}
-@keyframes signup-response{
-    from {opacity :1;}
-    to {opacity :0;}
+nav{
+    background-color: darkslategrey;
+    max-width: 100%;
 }
 
-@-webkit-keyframes signup-response{
-    from {opacity :1;}
-    to {opacity :0;}
+.user-font{
+    font-style: italic;
+    color: white;
 }
 
 .info-message {
@@ -73,46 +77,14 @@ form > h3{
     -webkit-animation-fill-mode: forwards;
 }
 
-.centered-admin{
-    text-align: center;
-    color:black;
-    font-weight: bold;
-}
-
 .info-text, .centeredadmin{
     color:black;
     font-weight: bold;
 }
 
-.text-eingeloggt{
-    color:white;
-    font-weight: bold;
-}
 
-.form_bg > div > div > div > form {
+.login-input{
     font-family: 'lato', sans-serif;
-}
-
-.form_bg > div > div > div > form > h3 {
-    color: white;
-    font-size: 30px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    margin: 0 0 35px 0;
-}
-
-.form_bg > div > div > div > form > div {
-    margin: 0 0 25px;
-    position: relative;
-}
-
-.form_bg > div > div > div > form > div> span {
-    font-size: 13px;
-    color: white;
-}
-
-.form_bg > div > div > div > form > div > input{
     color: #555;
     background-color: white;
     font-size: 13px;
@@ -123,15 +95,18 @@ form > h3{
     border-radius: 50px;
 }
 
-body > div.form_bg > div > div > div > form > div > input::placeholder{
+.login-h{
+    color: white;
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+input::placeholder{
     color:rgba(0,0,0,0.7);
     font-size: 14px;
     text-transform: capitalize;
-}
-
-body > div.container-md.member-div.vh-100 > div > form{
-    color:white;
-    font-size: 1rem;
 }
 
 #loginButtonWrapper{

@@ -9,29 +9,21 @@
     {% include 'navbar.html.twig' %}
 
     {% if message is defined and message is not null %}
-        <p class="info-message">{{ message }}</p>
+        <p class="info-message mt-3">{{ message }}</p>
     {% endif %}
 
-    <div class="form_bg text-center vh-100">
-        <div class="container-md">
-            <div class="row">
-                <div class="col">
-                    <form class="form_horizontal" action="{{ path('check_login') }}" method="post">
-                        <h3 class="title">Login</h3>
-                        <div class="form-group">
-                            <span class="input-icon"><i class="fa fa-user"></i></span>
-                            <input type="text" class="memberId" name="memberId" placeholder="Benutzer-ID">
-                        </div>
-                        <div class="form-group">
-                            <span class="input-icon"><i class="fa fa-lock"></i></span>
-                            <input type="password" class="password" name="password" placeholder="Passwort">
-                        </div>
-                        <button class="btn btn-outline-light" type="submit">Einloggen</button>
-                    </form>
-                </div>
-            </div>
-        </div>
+<div class="d-flex justify-content-center">
+    <div>
+        <form class="d-flex flex-column align-items-center" action="{{ path('check_login') }}" method="post">
+            <h3 class="title login-h">Login</h3>
+            <span class="input-icon"><i class="fa fa-user"></i></span>
+            <input type="text" class="memberId login-input mb-3" name="memberId" placeholder="Benutzer-ID">
+            <span class="input-icon"><i class="fa fa-lock"></i></span>
+            <input type="password" class="password login-input mb-3" name="password" placeholder="Passwort">
+            <button class="btn btn-outline-light" type="submit">Einloggen</button>
+        </form>
     </div>
+</div>
 
 
 {% endblock %}
