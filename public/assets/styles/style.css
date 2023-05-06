@@ -24,16 +24,6 @@ input, select {
     border-radius: 3px;
 }
 
-.logout-btn{
-    border-color: lightgrey;
-    font-weight: bold;
-    padding: .5rem;
-}
-
-.logout-btn:hover{
-    background-color: black;
-}
-
 .navbar-brand{
     color: white;
     font-size: 1.5rem;
@@ -82,7 +72,6 @@ nav{
     font-weight: bold;
 }
 
-
 .login-input{
     font-family: 'lato', sans-serif;
     color: #555;
@@ -114,6 +103,28 @@ input::placeholder{
     flex-direction: column;
 }
 
-.bg-custom-red{
-    background-color: #de4e4e;
+.logout-btn{
+    border-color: lightgrey;
+    font-weight: bold;
+    padding: .5rem;
+}
+
+.logout-btn:hover{
+    background-color: black;
+}
+
+.btn-dark{
+    background-color: #2F4F4F !important;
+}
+
+.btn-dark:hover{
+    background-color: #23272B !important;
+}
+
+.bg-danger{
+    background-color: #c96969c2 !important;
+}
+
+.bg-success{
+    background-color: #2b7048a1 !important;
 }
